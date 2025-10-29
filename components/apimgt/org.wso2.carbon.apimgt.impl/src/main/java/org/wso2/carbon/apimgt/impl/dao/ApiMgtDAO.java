@@ -10409,8 +10409,7 @@ public class ApiMgtDAO {
     public void deleteApplicationKeyMappingByMappingId(String keyMappingId) throws APIManagementException {
 
         Connection connection = null;
-        PreparedStat
-        ement ps = null;
+        PreparedStatement ps = null;
         try {
             connection = APIMgtDBUtil.getConnection();
             connection.setAutoCommit(false);
