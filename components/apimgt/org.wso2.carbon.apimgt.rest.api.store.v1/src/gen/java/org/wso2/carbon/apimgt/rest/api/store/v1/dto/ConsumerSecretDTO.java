@@ -72,7 +72,7 @@ public class ConsumerSecretDTO   {
   }
 
   
-  @ApiModelProperty(example = "{\"expiresAt\":1761568483853,\"description\":\"pizza application secret\"}", value = "Additional dynamic properties for the secret creation request.")
+  @ApiModelProperty(example = "{\"expiresAt\":1761568483,\"description\":\"pizza application secret\"}", value = "Additional dynamic properties for the secret creation request.")
   @JsonProperty("additionalProperties")
   public Map<String, Object> getAdditionalProperties() {
     return additionalProperties;

@@ -7457,7 +7457,7 @@ components:
           additionalProperties:
             type: object
           example:
-            expiresAt: 1761568483853
+            expiresAt: 1761568483
             description: "pizza application secret"
     #-----------------------------------------------------
     # Consumer Secret Request Object
