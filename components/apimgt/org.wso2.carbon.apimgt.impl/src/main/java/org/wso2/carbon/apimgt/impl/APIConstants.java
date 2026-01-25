@@ -3125,6 +3125,7 @@ public final class APIConstants {
         public static final String CLIENT_SECRET_COUNT = "client_secret_count";
         public static final String CLIENT_SECRET_DESCRIPTION = "client_secret_description";
         public static final String CLIENT_SECRET_EXPIRES_IN = "client_secret_expires_in";
+        public static final String CLIENT_SECRET_EXPIRES_AT = "client_secret_expires_at";
 
         public static final String CUSTOM_KM_TYPE = "CustomKeyManager";
         public static final String CUSTOM_KM_DISPLAY_NAME = "Custom Key Manager (Out-of-Band Provisioning)";

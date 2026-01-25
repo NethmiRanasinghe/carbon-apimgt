@@ -919,6 +919,12 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
             additionalProperties.put(APIConstants.KeyManager.APPLICATION_SCOPES,
                     appResponse.getApplicationScopes());
         }
+        if (APIUtil.isMultipleClientSecretsEnabled()) {
+            additionalProperties.put(APIConstants.KeyManager.CLIENT_SECRET_DESCRIPTION,
+                    appResponse.getClientSecretDescription());
+            additionalProperties.put(APIConstants.KeyManager.CLIENT_SECRET_EXPIRES_AT,
+                    appResponse.getClientSecretExpiredTime());
+        }
 
         oAuthApplicationInfo.addParameter(APIConstants.JSON_ADDITIONAL_PROPERTIES, additionalProperties);
         return oAuthApplicationInfo;
