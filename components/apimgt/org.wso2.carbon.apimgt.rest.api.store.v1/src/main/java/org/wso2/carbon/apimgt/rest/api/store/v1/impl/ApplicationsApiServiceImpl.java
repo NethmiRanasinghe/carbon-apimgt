@@ -1223,11 +1223,7 @@ public class ApplicationsApiServiceImpl implements ApplicationsApiService {
      */
     @Override
     public Response applicationsApplicationIdKeysKeyTypeRegenerateSecretPost(String applicationId,
-            String keyType, MessageContext messageContext) throws APIManagementException {
-        if (APIUtil.isMultipleClientSecretsEnabled()) {
-            throw new APIManagementException("The requested operation is not supported",
-                    ExceptionCodes.OPERATION_NOT_SUPPORTED_FOR_MULTIPLE_CLIENT_SECRET_MODE);
-        }
+            String keyType, MessageContext messageContext) {
         String username = RestApiCommonUtil.getLoggedInUsername();
         try {
             Set<APIKey> applicationKeys = getApplicationKeys(applicationId);
@@ -1599,10 +1595,6 @@ public class ApplicationsApiServiceImpl implements ApplicationsApiService {
                                                                                        String keyMappingId,
                                                                                        MessageContext messageContext)
             throws APIManagementException {
-        if (APIUtil.isMultipleClientSecretsEnabled()) {
-            throw new APIManagementException("The requested operation is not supported",
-                    ExceptionCodes.OPERATION_NOT_SUPPORTED_FOR_MULTIPLE_CLIENT_SECRET_MODE);
-        }
 
         String username = RestApiCommonUtil.getLoggedInUsername();
             Set<APIKey> applicationKeys = getApplicationKeys(applicationId);
