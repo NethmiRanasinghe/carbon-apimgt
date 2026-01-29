@@ -113,6 +113,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
 
     private Boolean kmAdminAsAppOwner = false;
     private Boolean enableApplicationScopes = false;
+    private Boolean multipleClientSecretsAllowed = false;
 
     @Override
     public OAuthApplicationInfo createApplication(OAuthAppRequest oauthAppRequest) throws APIManagementException {
@@ -543,7 +544,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
                     oAuthApplicationInfo.getClientId().getBytes(StandardCharsets.UTF_8)), request);
             OAuthApplicationInfo applicationInfo = buildDTOFromClientInfo(createdClient,
                     new OAuthApplicationInfo());
-            if (APIUtil.isMultipleClientSecretsEnabled()) {
+            if (multipleClientSecretsAllowed) {
                 applicationInfo.setClientSecret(APIUtil.maskSecret(applicationInfo.getClientSecret()));
             }
             return applicationInfo;
@@ -566,7 +567,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
                     oAuthApplicationInfo.getClientId().getBytes(StandardCharsets.UTF_8)));
             OAuthApplicationInfo applicationInfo = buildDTOFromClientInfo(updatedClient,
                     new OAuthApplicationInfo());
-            if (APIUtil.isMultipleClientSecretsEnabled()) {
+            if (multipleClientSecretsAllowed) {
                 applicationInfo.setClientSecret(APIUtil.maskSecret(applicationInfo.getClientSecret()));
             }
             return applicationInfo;
@@ -603,7 +604,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
                     consumerKey.getBytes(StandardCharsets.UTF_8)));
             OAuthApplicationInfo applicationInfo = buildDTOFromClientInfo(clientInfo,
                     new OAuthApplicationInfo());
-            if (APIUtil.isMultipleClientSecretsEnabled()) {
+            if (multipleClientSecretsAllowed) {
                 applicationInfo.setClientSecret(APIUtil.maskSecret(applicationInfo.getClientSecret()));
             }
             return applicationInfo;
@@ -919,7 +920,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
             additionalProperties.put(APIConstants.KeyManager.APPLICATION_SCOPES,
                     appResponse.getApplicationScopes());
         }
-        if (APIUtil.isMultipleClientSecretsEnabled()) {
+        if (multipleClientSecretsAllowed) {
             additionalProperties.put(APIConstants.KeyManager.CLIENT_SECRET_DESCRIPTION,
                     appResponse.getClientSecretDescription());
             additionalProperties.put(APIConstants.KeyManager.CLIENT_SECRET_EXPIRES_AT,
@@ -962,6 +963,12 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
                 APIConstants.KeyManager.ENABLE_APPLICATION_SCOPES);
         if (enableApplicationScopesParameter instanceof Boolean) {
             enableApplicationScopes = (boolean) enableApplicationScopesParameter;
+        }
+
+        Object multipleClientSecretsAllowedParameter =
+                configuration.getParameter(APIConstants.KeyManager.ENABLE_MULTIPLE_CLIENT_SECRETS);
+        if (multipleClientSecretsAllowedParameter != null) {
+            multipleClientSecretsAllowed = (boolean) multipleClientSecretsAllowedParameter;
         }
 
         String dcrEndpoint;
