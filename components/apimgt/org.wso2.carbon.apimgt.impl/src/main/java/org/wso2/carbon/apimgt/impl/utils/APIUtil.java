@@ -4892,6 +4892,9 @@ public final class APIUtil {
 
     public static String maskSecret(String secret) {
         boolean isHashingEnabled = OAuthServerConfiguration.getInstance().isClientSecretHashEnabled();
+        if (log.isDebugEnabled()) {
+            log.debug("Masking secret. Client Secret Hashing enabled: " + isHashingEnabled);
+        }
         if (secret == null || secret.isEmpty() || isHashingEnabled) {
             // Always return a fixed length mask value if secret is null or empty or if hashing is enabled
             return generateMask(CONSUMER_SECRET_MASK_LENGTH);

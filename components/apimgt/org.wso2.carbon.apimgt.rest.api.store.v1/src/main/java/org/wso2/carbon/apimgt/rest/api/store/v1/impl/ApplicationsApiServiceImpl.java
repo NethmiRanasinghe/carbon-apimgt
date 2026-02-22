@@ -1260,6 +1260,10 @@ public class ApplicationsApiServiceImpl implements ApplicationsApiService {
             throw new APIManagementException("The requested operation is not supported",
                     ExceptionCodes.OPERATION_NOT_SUPPORTED_FOR_SINGLE_CLIENT_SECRET_MODE);
         }
+        if (log.isDebugEnabled()) {
+            log.debug("Generating consumer secret for application: " + applicationId
+                    + " and key mapping: " + keyMappingId);
+        }
         String username = RestApiCommonUtil.getLoggedInUsername();
         Set<APIKey> applicationKeys = getApplicationKeys(applicationId);
         if (applicationKeys == null) {
@@ -1275,6 +1279,10 @@ public class ApplicationsApiServiceImpl implements ApplicationsApiService {
                     consumerSecretRequest);
             ConsumerSecretDTO consumerSecretResponseDTO = ApplicationKeyMappingUtil.
                     fromConsumerSecretToDTO(consumerSecret);
+            if (log.isDebugEnabled()) {
+                log.debug("Consumer secret generated for application: " + applicationId
+                        + " and key mapping: " + keyMappingId);
+            }
             return Response.status(Response.Status.CREATED).entity(consumerSecretResponseDTO).build();
         } else {
             RestApiUtil.handleResourceNotFoundError(RestApiConstants.RESOURCE_APP_CONSUMER_KEY, keyMappingId, log);
@@ -1317,6 +1325,10 @@ public class ApplicationsApiServiceImpl implements ApplicationsApiService {
             throw new APIManagementException("The requested operation is not supported",
                     ExceptionCodes.OPERATION_NOT_SUPPORTED_FOR_SINGLE_CLIENT_SECRET_MODE);
         }
+        if (log.isDebugEnabled()) {
+            log.debug("Revoking consumer secret of application: " + applicationId
+                    + " and key mapping: " + keyMappingId);
+        }
         String username = RestApiCommonUtil.getLoggedInUsername();
         Set<APIKey> applicationKeys = getApplicationKeys(applicationId);
         if (applicationKeys == null) {
@@ -1330,6 +1342,10 @@ public class ApplicationsApiServiceImpl implements ApplicationsApiService {
                     fromDTOtoConsumerSecretRequest(clientId, consumerSecretDeletionRequestDTO);
             apiConsumer.deleteConsumerSecret(consumerSecretDeletionRequestDTO.getSecretId(),
                     applicationKeyDTO.getKeyManager(), consumerSecretRequest);
+            if (log.isDebugEnabled()) {
+                log.debug("Consumer secret revoked for application: " + applicationId
+                        + " and key mapping: " + keyMappingId);
+            }
             return Response.noContent().build();
         } else {
             RestApiUtil.handleResourceNotFoundError(RestApiConstants.RESOURCE_APP_CONSUMER_KEY, keyMappingId, log);

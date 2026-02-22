@@ -708,6 +708,9 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
         }
         try {
             clientSecret = dcrClient.generateNewApplicationSecret(encodedClientId, clientSecretRequest);
+            if (log.isDebugEnabled()) {
+                log.debug("Generated new consumer secret for clientId: " + clientId);
+            }
         } catch (KeyManagerClientException e) {
             String errMsg = "Error while generating new consumer secret for clientId : " + clientId;
             throw new APIManagementException(errMsg, e, ExceptionCodes
@@ -770,6 +773,9 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
         String encodedSecretId = Base64.getUrlEncoder().encodeToString(secretId.getBytes(StandardCharsets.UTF_8));
         try {
             dcrClient.deleteApplicationSecret(encodedClientId, encodedSecretId);
+            if (log.isDebugEnabled()) {
+                log.debug("Deleted consumer secret with secretId: " + secretId + " for clientId: " + clientId);
+            }
         } catch (KeyManagerClientException e) {
             String errMsg = "Error while deleting consumer secret of clientId : " + clientId;
             throw new APIManagementException(errMsg, e, ExceptionCodes
