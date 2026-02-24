@@ -42,8 +42,8 @@ public class KeyManagerApplicationConfigValidatorFactory {
 
         switch (type) {
             case RANGE:
-            case RANGE_MIN:
-            case RANGE_MAX:
+            case MIN:
+            case MAX:
                 return new RangeValidator(type);
             case REGEX:
                 return new RegexValidator();

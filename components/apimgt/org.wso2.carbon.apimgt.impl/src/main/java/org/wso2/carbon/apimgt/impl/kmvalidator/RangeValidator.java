@@ -38,7 +38,7 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
-        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.RANGE_MIN) {
+        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MIN) {
             if (!constraints.containsKey("min")) {
                 throw new APIManagementException("Minimum value ('min') not found for range constraint.");
             }
@@ -47,7 +47,7 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
             }
         }
 
-        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.RANGE_MAX) {
+        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MAX) {
             if (!constraints.containsKey("max")) {
                 throw new APIManagementException("Maximum value ('max') not found for range constraint.");
             }
@@ -78,7 +78,7 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
 
         double val = ((Number) inputValue).doubleValue();
 
-        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.RANGE_MIN) {
+        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MIN) {
             if (constraints.containsKey("min")) {
                 double min = ((Number) constraints.get("min")).doubleValue();
                 if (val < min) {
@@ -88,7 +88,7 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
             }
         }
 
-        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.RANGE_MAX) {
+        if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MAX) {
             if (constraints.containsKey("max")) {
                 double max = ((Number) constraints.get("max")).doubleValue();
                 if (val > max) {

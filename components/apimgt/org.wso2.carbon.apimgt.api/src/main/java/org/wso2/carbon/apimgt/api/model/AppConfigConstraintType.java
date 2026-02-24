@@ -23,8 +23,8 @@ package org.wso2.carbon.apimgt.api.model;
  */
 public enum AppConfigConstraintType {
     RANGE("RANGE"),
-    RANGE_MIN("RANGE_MIN"),
-    RANGE_MAX("RANGE_MAX"),
+    MIN("MIN"),
+    MAX("MAX"),
     REGEX("REGEX"),
     ENUM("ENUM");
 
