@@ -1043,9 +1043,9 @@ public class APIConsumerImplTest {
         // Test Validation (Tampered signature)
         try {
             apiConsumer.validateSignedUrl(exp, "wrong-sig", apiUUID);
-            Assert.fail("Should have thrown APIMgtAuthorizationFailedException for tampered UUID");
-        } catch (APIMgtAuthorizationFailedException e) {
-            Assert.assertTrue(e.getMessage().contains("unauthorized"));
+            Assert.fail("Expected APIManagementException due to invalid signature");
+        } catch (APIManagementException e) {
+            Assert.assertEquals(401, e.getErrorHandler().getHttpStatusCode());
         }
     }
 
