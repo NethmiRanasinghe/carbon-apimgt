@@ -163,6 +163,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -3367,7 +3368,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
     }
 
     /**
-     * This method is used to get WSDL file of an API. If the WSDL file is a zip archive, it will be extracted and the main WSDL file content will be returned.
+     * This method is used to get WSDL file of an API. If the WSDL file is a zip archive, it will returned the zip.
      *
      * @param api             API for which WSDL file needs to be retrieved
      * @param environmentName  Name of the environment
@@ -3383,8 +3384,9 @@ APIConstants.AuditLogConstants.DELETED, this.username);
     }
 
     /**
-     * This method is used to get WSDL file of an API. If the WSDL file is a zip archive, it will be extracted and the main WSDL file content will be returned
-     * if includeMainWSDLContent is true.
+     * This method is used to get WSDL file of an API.
+     * If the WSDL file is a zip archive, it will be extracted and the main WSDL file content will be returned if requested.
+     *
      *
      * @param api                     API for which WSDL file needs to be retrieved
      * @param includeMainWSDLContent  Flag indicating whether to include main WSDL content for WSDL archives
@@ -5180,7 +5182,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
             String separator = basePath.getQuery() == null ? "?" : "&";
             return generateSignedUrl(String.valueOf(basePath), separator, apiUUID);
         } catch (Exception e) {
-            String msg = "Unexpected error generating URL for API resource: " + apiUUID;
+            String msg = "Unexpected error generating WSDL URL for API: " + apiUUID;
             throw new APIManagementException(msg, e);
         }
 
@@ -5229,9 +5231,13 @@ APIConstants.AuditLogConstants.DELETED, this.username);
             throw new APIManagementException("Could not resolve HMAC secret key from API Manager Configuration.");
         }
         try {
-            return base64Key.getBytes(StandardCharsets.UTF_8);
+            return Base64.getDecoder().decode(base64Key);
         } catch (IllegalArgumentException e) {
-            throw new APIManagementException("HMAC secret key is not valid", e);
+            String msg = "HMAC secret key is not a valid Base64 encoded string.";
+            if (log.isDebugEnabled()) {
+                log.debug(msg);
+            }
+            throw new APIManagementException(msg, e);
         }
     }
 

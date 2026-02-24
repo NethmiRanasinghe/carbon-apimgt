@@ -310,6 +310,10 @@ public class APIFileUtil {
             throws APIManagementException {
         try {
             File extractedDir = new File(extractedArchivePath);
+            if (!extractedDir.isDirectory()) {
+                throw new APIManagementException(
+                        "Extracted WSDL archive path is not a directory.", ExceptionCodes.CANNOT_PROCESS_WSDL_CONTENT);
+            }
             Collection<File> wsdlFiles = searchFilesWithMatchingExtension(extractedDir, WSDL_FILE_EXTENSION);
             if (wsdlFiles == null || wsdlFiles.isEmpty()) {
                 log.warn("No WSDL files found in extracted archive path.");

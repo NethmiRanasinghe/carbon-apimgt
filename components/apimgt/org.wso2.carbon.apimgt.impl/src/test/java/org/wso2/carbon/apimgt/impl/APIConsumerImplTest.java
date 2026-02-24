@@ -1014,14 +1014,15 @@ public class APIConsumerImplTest {
         assertNotNull(apiKeySet.iterator().next().getAccessToken());
     }
 
-    private static final String TEST_HMAC_KEY = "dGVzdC1obWFjLWtleS10ZXN0aW5nLTEyMzQ1Njc4";
+//    private static final String TEST_HMAC_KEY = "4IG6vbpIi7jR5ls0fuIuZoL5kds178iXUAP+YG7tun0=";
+    private static final byte[] TEST_HMAC_KEY = "test-hmac-key".getBytes(StandardCharsets.UTF_8);
 
     @Test
     public void testGenerateAndValidateSignedUrl() throws Exception {
         APIConsumerImpl apiConsumer = new APIConsumerImplWrapper(apiMgtDAO) {
             @Override
             protected byte[] getHmacKeyBytes() {
-                return TEST_HMAC_KEY.getBytes(StandardCharsets.UTF_8);
+                return TEST_HMAC_KEY;
             }
         };
 

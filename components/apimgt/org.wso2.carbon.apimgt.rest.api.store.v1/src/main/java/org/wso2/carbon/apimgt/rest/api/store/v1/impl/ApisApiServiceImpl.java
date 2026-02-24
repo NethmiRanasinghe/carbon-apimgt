@@ -91,6 +91,12 @@ public class ApisApiServiceImpl implements ApisApiService {
 
     private static final Log log = LogFactory.getLog(ApisApiServiceImpl.class);
 
+    private static final Set<String> ALLOWED_RESOURCE_TYPES = new HashSet<>(Arrays.asList(
+            APIConstants.WSDL,
+            APIConstants.SWAGGER,
+            APIConstants.OPEN_API
+    ));
+
     @Override
     public Response apisGet(Integer limit, Integer offset, String xWSO2Tenant, String query, String ifNoneMatch,
             MessageContext messageContext) {
@@ -1274,27 +1280,17 @@ public class ApisApiServiceImpl implements ApisApiService {
             String xWSO2Tenant, MessageContext messageContext) throws APIManagementException {
 
         String tenantDomain = RestApiUtil.getValidatedOrganization(messageContext);
-        final Set<String> ALLOWED_RESOURCE_TYPES = new HashSet<>();
-        ALLOWED_RESOURCE_TYPES.add(APIConstants.WSDL);
-        ALLOWED_RESOURCE_TYPES.add(APIConstants.SWAGGER);
-        ALLOWED_RESOURCE_TYPES.add(APIConstants.OPEN_API);
-
-        if (StringUtils.isEmpty(apiId) || StringUtils.isEmpty(resourceType)) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Collections.singletonMap("error", "Resource Type is required")).build();
-        }
 
         if (!ALLOWED_RESOURCE_TYPES.contains(resourceType.toLowerCase())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Collections.singletonMap("error", "Unsupported resource Type")).build();
         }
 
-        String organization = RestApiUtil.getValidatedOrganization(messageContext);
         APIConsumer apiConsumer = RestApiCommonUtil.getLoggedInUserConsumer();
-        API api = apiConsumer.getLightweightAPIByUUID(apiId, organization);
+        API api = apiConsumer.getLightweightAPIByUUID(apiId, tenantDomain);
         APIIdentifier apiIdentifier = api.getId();
 
-        Map<String, Environment> environments = APIUtil.getEnvironments(organization);
+        Map<String, Environment> environments = APIUtil.getEnvironments(tenantDomain);
         if (environments != null && environments.size() > 0) {
             if (StringUtils.isEmpty(environmentName)) {
                 environmentName = api.getEnvironments().iterator().next();
@@ -1330,7 +1326,7 @@ public class ApisApiServiceImpl implements ApisApiService {
                                     selectedEnvironment.getName()).build();
                 }
 
-                generatedUrl = apiConsumer.generateUrlToWSDL(apiId, resourceType, organization, baseUrl);
+                generatedUrl = apiConsumer.generateUrlToWSDL(apiId, resourceType, tenantDomain, baseUrl);
             }
             Map<String, String> resp = Collections.singletonMap("url", generatedUrl);
             return Response.ok(resp).build();
