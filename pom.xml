@@ -2074,7 +2074,7 @@
         <carbon.commons.version>4.13.1</carbon.commons.version>
 
         <carbon.registry.version>4.9.2</carbon.registry.version>
-        <carbon.mediation.version>4.8.3</carbon.mediation.version>
+        <carbon.mediation.version>4.8.4</carbon.mediation.version>
 
         <mongodb.driver.version>4.1.0</mongodb.driver.version>
 
@@ -2328,7 +2328,7 @@
         <tika.version>2.7.0</tika.version>
         <batik.version>1.17</batik.version>
         <mcp.transformer.version>0.9.1</mcp.transformer.version>
-        <netty.version>4.1.126.Final</netty.version>
+        <netty.version>4.1.131.Final</netty.version>
         <apicurio.version>2.2.2</apicurio.version>
     </properties>
 </project>
