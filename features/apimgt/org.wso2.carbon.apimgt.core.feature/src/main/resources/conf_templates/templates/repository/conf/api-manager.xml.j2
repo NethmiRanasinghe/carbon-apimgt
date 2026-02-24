@@ -663,6 +663,7 @@
         <CreateDefaultApplication>{{apim.devportal.create_default_application}}</CreateDefaultApplication>
         {% endif %}
         <Mode>{{apim.devportal.mode}}</Mode>
+        <HMACSecret>{{apim.devportal.url_generation_secret}}</HMACSecret>
     </APIStore>
 
     <APIPublisher>
@@ -997,6 +998,10 @@
             <AllowedURI>
                 <URI>/api/am/governance/{version}/swagger.json</URI>
                 <HTTPMethods>GET,HEAD</HTTPMethods>
+            </AllowedURI>
+            <AllowedURI>
+                <URI>/api/am/devportal/{version}/apis/{apiId}/generate-url</URI>
+                <HTTPMethods>HEAD,POST</HTTPMethods>
             </AllowedURI>
         </AllowedURIs>
         <BasicAuthBlockedURIs>
