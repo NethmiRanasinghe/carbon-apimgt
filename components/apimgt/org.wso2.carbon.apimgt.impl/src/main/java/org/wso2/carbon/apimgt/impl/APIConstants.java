@@ -208,7 +208,9 @@ public final class APIConstants {
     public static final String FILE_URI_PREFIX = "file://";
     public static final String API_DOC_RESOURCE_NAME = "api-doc.json";
 
-    public static final String WSDL = "wsdl";
+    public static final String WSDL_RESOURCE_TYPE = "wsdl";
+    public static final String URL_EXPIRATION_TIME_PARAM = "exp=";
+    public static final String URL_SIGNATURE_PARAM = "&sig=";
 
     public static final String WSDL_VERSION_11 = "1.1";
     public static final String WSDL_VERSION_20 = "2.0";
@@ -1140,6 +1142,7 @@ public final class APIConstants {
     public static final String API_DEVPORTAL_DEFAULT_RESERVED_USERNAME = API_STORE +
             "DefaultReservedUsername";
     public static final String API_STORE_CREATE_DEFAULT_APPLICATION = API_STORE + "CreateDefaultApplication";
+    public static final String DEVPORTAL_URL_GENERATION_SECRET = API_STORE + "URLGenSecret";
 
     public static final String API_PUBLISHER = "APIPublisher.";
     public static final String SHOW_API_PUBLISHER_URL_FROM_STORE = API_PUBLISHER + "DisplayURL";
@@ -2879,8 +2882,7 @@ public final class APIConstants {
         public static final String PUB_API_RESPONSE_PARAMS_ID = "id";
         public static final String DYNAMIC_CLIENT_REGISTRATION_URL_SUFFIX =
                 "/client-registration/" + REST_API_OLD_VERSION + "/register";
-        public static final String REST_API_DEVELOPER_PORTAL_VERSION ="v3";
-        public static final String REST_API_DEVELOPER_PORTAL_CONTEXT = "api/am/devportal";
+        public static final String ENVIRONMENT_NAME = "environmentName";
     }
 
     public static final int MAX_LENGTH_API_NAME = 60;
@@ -3801,7 +3803,6 @@ public final class APIConstants {
         public static final String GATEWAY_ID = "gatewayId";
         public static final String  LOADING_TENANTS = "loadingTenants";
         public static final String ENVIRONMENT_LABELS = "environmentLabels";
-        public static final String ENVIRONMENT_NAME = "environmentName";
         public static final String GATEWAY_PROPERTIES = "gatewayProperties";
         public static final String TIMESTAMP = "timeStamp";
         public static final String GATEWAY_NOTIFICATION_ENDPOINT = INTERNAL_WEB_APP_EP + "/notify-gateway";

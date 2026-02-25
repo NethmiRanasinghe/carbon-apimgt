@@ -620,16 +620,10 @@ paths:
         - APIs
       summary: Get API WSDL definition
       description: |
-        This operation can be used to retrieve the swagger definition of an API.
+        This operation can be used to retrieve the WSDL definition of an API.
       operationId: getWSDLOfAPI
       parameters:
-        - name: includeMainWSDLContent
-          in: query
-          description: |
-            If true, send the content of the main WSDL file and not the zip file.
-          required: false
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/formatWsdl'
         - $ref: '#/components/parameters/apiId'
         - $ref: '#/components/parameters/environmentName'
         - $ref: '#/components/parameters/If-None-Match'
@@ -4604,32 +4598,22 @@ paths:
           source: 'curl -k -X POST -H "Content-Type: application/json" -d @request.json
           "https://localhost:9443/api/am/devportal/v3/apis/e93fb282-b456-48fc-8981-003fb89086ae/api-chat?apiChatAction=EXECUTE"'
 
-  /apis/{apiId}/generate-url:
+  /apis/{apiId}/generate-definition-url:
     post:
       tags:
         - APIs
       summary: Generate a URL to download a resource for an API
       description: >-
-        Generate a download URL for an API resource (WSDL / Swagger / OpenAPI).
-        For public APIs the URL will be returned without `exp`/`sig` query params.
-      operationId: generateUrlToDownloadResource
+        Generate a URL to access an API resource like the WSDL definition.
+      operationId: generateDefinitionURL
       parameters:
-        - name: type
-          in: query
-          description: Type of the resource (wsdl, swagger, openapi)
-          required: true
-          schema:
-            type: string
-            enum:
-              - wsdl
-              - swagger
-              - openapi
+        - $ref: '#/components/parameters/resourceType'
         - $ref: '#/components/parameters/environmentName'
         - $ref: '#/components/parameters/apiId'
         - $ref: '#/components/parameters/requestedTenant'
       responses:
         '200':
-          description: OK. Returns JSON with the generated download URL.
+          description: OK. Returns generated download URL as a string.
           content:
             application/json:
               schema:
@@ -7631,10 +7615,27 @@ components:
       name: sig
       in: query
       description: |
-        Signature to validate of the generated URL.
+        Signature to validate the generated URL.
       required: false
       schema:
         type: string
+    formatWsdl:
+      name: format
+      in: query
+      description: |
+        If format is wsdl, send the content of the main WSDL file and not the archived WSDL. If not defined, send the zip.
+      required: false
+      schema:
+        type: string
+    resourceType:
+      name: type
+      in: query
+      description: Type of the resource to be retrieved using the generated url (Ex - wsdl)
+      required: true
+      schema:
+        type: string
+        enum:
+          - wsdl
     limit:
       name: limit
       in: query

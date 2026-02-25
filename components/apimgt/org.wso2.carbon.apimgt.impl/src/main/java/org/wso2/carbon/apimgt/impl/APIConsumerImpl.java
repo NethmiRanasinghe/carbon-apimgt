@@ -3380,7 +3380,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
     @Override
     public ResourceFile getWSDL(API api, String environmentName, String environmentType, String organization)
             throws APIManagementException {
-        return getWSDLCore(api, environmentName, environmentType, organization, false);
+        return getWSDLCore(api, environmentName, environmentType, organization, null);
     }
 
     /**
@@ -3389,7 +3389,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
      *
      *
      * @param api                     API for which WSDL file needs to be retrieved
-     * @param includeMainWSDLContent  Flag indicating whether to include main WSDL content for WSDL archives
+     * @param fileFormat  Flag indicating whether to include main WSDL content for WSDL archives
      * @param environmentName          Name of the environment
      * @param environmentType          Type of the environment (e.g., production, sandbox)
      * @param organization            Identifier of an Organization
@@ -3397,13 +3397,13 @@ APIConstants.AuditLogConstants.DELETED, this.username);
      * @throws APIManagementException if there is an error while retrieving or processing the WSDL file
      */
     @Override
-    public ResourceFile getWSDL(API api, Boolean includeMainWSDLContent, String environmentName, String environmentType,
+    public ResourceFile getWSDL(API api, String fileFormat, String environmentName, String environmentType,
             String organization) throws APIManagementException {
-        return getWSDLCore(api, environmentName, environmentType, organization, includeMainWSDLContent);
+        return getWSDLCore(api, environmentName, environmentType, organization, fileFormat);
     }
 
     private ResourceFile getWSDLCore(API api, String environmentName, String environmentType, String organization,
-            Boolean includeMainWSDLContent) throws APIManagementException {
+            String fileFormat) throws APIManagementException {
 
         ResourceFile resourceFile = getWSDL(api.getUuid(), organization);
         boolean isZip = resourceFile.getContentType().contains(APIConstants.APPLICATION_ZIP);
@@ -3425,8 +3425,8 @@ APIConstants.AuditLogConstants.DELETED, this.username);
         wsdlProcessor.updateEndpoints(api, environmentName, environmentType);
         InputStream wsdlDataStream = wsdlProcessor.getWSDL();
 
-        // Only relevant for wsdl archives, when main WSDL content is requested
-        if (isZip && Boolean.TRUE.equals(includeMainWSDLContent)) {
+        // Only relevant for wsdl archives, when format is requested in wsdl
+        if (isZip && APIConstants.WSDL_RESOURCE_TYPE.equalsIgnoreCase(fileFormat)) {
             InputStream mainWsdlFileContent = APIFileUtil.getRootWSDLFileFromExtractedArchive(
                     validationResponse.getWsdlArchiveInfo().getLocation());
             return new ResourceFile(mainWsdlFileContent, APIConstants.APPLICATION_WSDL_MEDIA_TYPE);
@@ -5167,94 +5167,9 @@ APIConstants.AuditLogConstants.DELETED, this.username);
     }
 
     @Override
-    public String generateUrlToWSDL(String apiUUID, String resourceType, String organization, URI basePath)
+    public API getAPIWithoutPermissionCheck(String apiId, String organization)
             throws APIManagementException {
+        return (getAPIorAPIProductByUUIDWithoutPermissionCheck(apiId, organization)).getApi();
 
-        ApiTypeWrapper apiTypeWrapper = getAPIorAPIProductByUUIDWithoutPermissionCheck(apiUUID, organization);
-        API api = apiTypeWrapper.getApi();
-        String visibility = api.getVisibility();
-        if (APIConstants.PERMISSION_NOT_RESTRICTED.equalsIgnoreCase(visibility)) {
-            return String.valueOf(basePath);
-        }
-
-        try {
-            // URL expires in 15 minutes
-            String separator = basePath.getQuery() == null ? "?" : "&";
-            return generateSignedUrl(String.valueOf(basePath), separator, apiUUID);
-        } catch (Exception e) {
-            String msg = "Unexpected error generating WSDL URL for API: " + apiUUID;
-            throw new APIManagementException(msg, e);
-        }
-
-    }
-
-    protected String generateSignedUrl(String basePath, String separator, String apiUUID)
-            throws APIManagementException {
-        try {
-            long timeOfExpiration = (System.currentTimeMillis() + (15 * 60 * 1000)) / 1000;
-            byte[] signedString = hmacSHA256((apiUUID + ":" + timeOfExpiration), getHmacKeyBytes());
-            String signature = hexFromBytes(signedString);
-            return basePath + separator + "exp=" + timeOfExpiration + "&sig=" + signature;
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new APIManagementException("Error generating HMAC signature for API resource URL: " + apiUUID, e);
-        }
-    }
-
-    protected void validateSignedUrl(long exp, String sig, String apiUUID) throws APIManagementException {
-        long now = System.currentTimeMillis() / 1000L;
-        if (exp <= now) {
-            throw new APIManagementException("Provided URL is expired for API UUID: " + apiUUID, ExceptionCodes.WSDL_URL_INVALID);
-        }
-        try {
-            byte[] signedString = hmacSHA256((apiUUID + ":" + exp), getHmacKeyBytes());
-            String expectedSignature = hexFromBytes(signedString);
-            if (sig == null || !MessageDigest.isEqual(expectedSignature.getBytes(StandardCharsets.UTF_8),
-                    sig.getBytes(StandardCharsets.UTF_8))) {
-                throw new APIManagementException("Provided URL is unauthorized for API UUID: " + apiUUID,
-                        ExceptionCodes.WSDL_URL_INVALID);
-            }
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new APIManagementException("Error validating HMAC signature for API URL: " + apiUUID, e);
-        }
-    }
-
-    @Override
-    public API getAPIBySignedUrlValidation(long exp, String sig, String apiId, String org)
-            throws APIManagementException {
-        validateSignedUrl(exp, sig, apiId);
-        ApiTypeWrapper apiTypeWrapper = getAPIorAPIProductByUUIDWithoutPermissionCheck(apiId, org);
-        return (apiTypeWrapper.getApi());
-    }
-
-    protected byte[] getHmacKeyBytes() throws APIManagementException {
-        String base64Key = ServiceReferenceHolder.getInstance().getAPIManagerConfigurationService()
-                .getAPIManagerConfiguration().getUrlGenSecret();
-        if (StringUtils.isEmpty(base64Key)) {
-            throw new APIManagementException("Could not resolve HMAC secret key from API Manager Configuration.");
-        }
-        try {
-            return Base64.getDecoder().decode(base64Key);
-        } catch (IllegalArgumentException e) {
-            String msg = "HMAC secret key is not a valid Base64 encoded string.";
-            if (log.isDebugEnabled()) {
-                log.debug(msg);
-            }
-            throw new APIManagementException(msg, e);
-        }
-    }
-
-    private static byte[] hmacSHA256(String data, byte[] key) throws NoSuchAlgorithmException, InvalidKeyException {
-        Mac mac = Mac.getInstance(APIConstants.AWSConstants.HMAC_SHA_256);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key, APIConstants.AWSConstants.HMAC_SHA_256);
-        mac.init(secretKeySpec);
-        return mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private static String hexFromBytes(byte[] bytes) {
-        StringBuilder result = new StringBuilder();
-        for (byte b : bytes) {
-            result.append(String.format("%02x", b));
-        }
-        return result.toString();
     }
 }

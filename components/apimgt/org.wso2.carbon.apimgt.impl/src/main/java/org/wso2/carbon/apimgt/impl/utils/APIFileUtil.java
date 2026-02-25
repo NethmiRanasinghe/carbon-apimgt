@@ -304,27 +304,30 @@ public class APIFileUtil {
      * root, consistent with the assumption made in WSDL11ProcessorImpl and WSDL20ProcessorImpl.
      *
      * @param extractedArchivePath path to the extracted WSDL archive directory
-     * @return the root WSDL {@link File}, or null if no WSDL file is found
+     * @return the root WSDL input stream
      */
     public static InputStream getRootWSDLFileFromExtractedArchive(String extractedArchivePath)
             throws APIManagementException {
         try {
             File extractedDir = new File(extractedArchivePath);
-            if (!extractedDir.isDirectory()) {
+            if (!extractedDir.exists() || !extractedDir.isDirectory()) {
                 throw new APIManagementException(
                         "Extracted WSDL archive path is not a directory.", ExceptionCodes.CANNOT_PROCESS_WSDL_CONTENT);
             }
             Collection<File> wsdlFiles = searchFilesWithMatchingExtension(extractedDir, WSDL_FILE_EXTENSION);
             if (wsdlFiles == null || wsdlFiles.isEmpty()) {
-                log.warn("No WSDL files found in extracted archive path.");
+                log.warn("No WSDL files found in extracted archive path " + extractedArchivePath);
                 throw new APIManagementException("", ExceptionCodes.NO_WSDL_FOUND_IN_WSDL_ARCHIVE);
             }
             File rootWsdl = wsdlFiles.iterator().next();
+            if (log.isDebugEnabled()) {
+                log.debug("Root WSDL file found in the extracted archive: " + rootWsdl.getAbsolutePath());
+            }
             return Files.newInputStream(rootWsdl.toPath());
         } catch (IOException e) {
             String errorMsg = "Error while getting content of the main WSDL file.";
             log.error(errorMsg, e);
-            throw new APIManagementException(errorMsg, ExceptionCodes.CANNOT_PROCESS_WSDL_CONTENT);
+            throw new APIManagementException(errorMsg, e, ExceptionCodes.CANNOT_PROCESS_WSDL_CONTENT);
         }
     }
 }

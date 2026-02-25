@@ -252,7 +252,9 @@ public enum ExceptionCodes implements ErrorHandler {
     NO_WSDL_AVAILABLE_FOR_API(900684, "WSDL Not Found", 404, "No WSDL Available for the API %s:%s"),
     CORRUPTED_STORED_WSDL(900685, "Corrupted Stored WSDL", 500, "The WSDL of the API %s is corrupted."),
     UNSUPPORTED_WSDL_FILE_EXTENSION(900686, "Unsupported WSDL File Extension", 400, "Unsupported extension. Only supported extensions are .wsdl and .zip"),
-
+    UNSUPPORTED_RESOURCE_TYPE(900687, "Unsupported resource type", 400, "Cannot generate URL for the unsupported resource type %s."),
+    API_TYPE_INCOMPATIBLE_WITH_RESOURCE(902057, "Resource type incompatible with API type", 400,
+            "Resource type '%s' is not supported for API type '%s'"),
 
     //OpenAPI/Swagger related codes [900750 900???)
     MALFORMED_OPENAPI_DEFINITON(900758, "Malformed OpenAPI Definition", 400, "The provided OpenAPI definition is not parsable as a valid JSON or YAML."),

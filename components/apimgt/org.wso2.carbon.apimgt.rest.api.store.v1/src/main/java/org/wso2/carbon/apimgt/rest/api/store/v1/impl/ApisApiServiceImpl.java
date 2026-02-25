@@ -56,6 +56,7 @@ import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.rest.api.common.RestApiCommonUtil;
 import org.wso2.carbon.apimgt.rest.api.store.v1.ApisApiService;
+import org.wso2.carbon.apimgt.rest.api.store.v1.models.AllowedResourceType;
 import org.wso2.carbon.apimgt.spec.parser.definitions.GraphQLSchemaDefinition;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,9 +71,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Collections;
-import java.util.HashSet;
 
 import org.wso2.carbon.apimgt.rest.api.store.v1.dto.*;
 import org.wso2.carbon.apimgt.rest.api.store.v1.mappings.APIMappingUtil;
@@ -90,12 +88,6 @@ import javax.ws.rs.core.Response;
 public class ApisApiServiceImpl implements ApisApiService {
 
     private static final Log log = LogFactory.getLog(ApisApiServiceImpl.class);
-
-    private static final Set<String> ALLOWED_RESOURCE_TYPES = new HashSet<>(Arrays.asList(
-            APIConstants.WSDL,
-            APIConstants.SWAGGER,
-            APIConstants.OPEN_API
-    ));
 
     @Override
     public Response apisGet(Integer limit, Integer offset, String xWSO2Tenant, String query, String ifNoneMatch,
@@ -1132,7 +1124,7 @@ public class ApisApiServiceImpl implements ApisApiService {
     }
 
     @Override
-    public Response getWSDLOfAPI(String apiId, Boolean includeMainWSDLContent, String environmentName,
+    public Response getWSDLOfAPI(String apiId, String fileFormat, String environmentName,
             String ifNoneMatch, String xWSO2Tenant, Long exp, String sig, String xWSO2TenantQ,
             MessageContext messageContext) throws APIManagementException {
         String organization;
@@ -1145,7 +1137,8 @@ public class ApisApiServiceImpl implements ApisApiService {
         API api;
         if (exp != null && exp != 0L && StringUtils.isNotEmpty(sig)) {
             // private API path: validate signature and get the API bypassing normal visibility checks
-            api = apiConsumer.getAPIBySignedUrlValidation(exp, sig, apiId, organization);
+            api = apiConsumer.getAPIWithoutPermissionCheck(apiId, organization);
+            RestApiCommonUtil.validateSignedUrl(exp, sig, apiId);
         } else {
             // Public API path: visibility checks applied inside getLightweightAPIByUUID
             api = apiConsumer.getLightweightAPIByUUID(apiId, organization);
@@ -1170,7 +1163,7 @@ public class ApisApiServiceImpl implements ApisApiService {
                 throw new APIManagementException(ExceptionCodes.from(ExceptionCodes.INVALID_GATEWAY_ENVIRONMENT,
                         environmentName));
             }
-            ResourceFile wsdl = apiConsumer.getWSDL(api, includeMainWSDLContent, selectedEnvironment.getName(), selectedEnvironment.getType(),
+            ResourceFile wsdl = apiConsumer.getWSDL(api, fileFormat, selectedEnvironment.getName(), selectedEnvironment.getType(),
                     organization);
 
             return RestApiUtil.getResponseFromResourceFileForDevportal(apiIdentifier.toString(), wsdl);
@@ -1276,26 +1269,30 @@ public class ApisApiServiceImpl implements ApisApiService {
      * @return URL to download the API definition document for the given gateway environment
      */
     @Override
-    public Response generateUrlToDownloadResource(String resourceType, String apiId, String environmentName,
+    public Response generateDefinitionURL(String resourceType, String apiId, String environmentName,
             String xWSO2Tenant, MessageContext messageContext) throws APIManagementException {
-
-        String tenantDomain = RestApiUtil.getValidatedOrganization(messageContext);
-
-        if (!ALLOWED_RESOURCE_TYPES.contains(resourceType.toLowerCase())) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Collections.singletonMap("error", "Unsupported resource Type")).build();
+        String generatedUrl = null;
+        String organization = RestApiUtil.getValidatedOrganization(messageContext);
+        if (!AllowedResourceType.contains(resourceType.toLowerCase())) {
+            throw new APIManagementException(
+                    ExceptionCodes.from(ExceptionCodes.UNSUPPORTED_RESOURCE_TYPE, resourceType));
         }
-
         APIConsumer apiConsumer = RestApiCommonUtil.getLoggedInUserConsumer();
-        API api = apiConsumer.getLightweightAPIByUUID(apiId, tenantDomain);
+        API api = apiConsumer.getLightweightAPIByUUID(apiId, organization);
         APIIdentifier apiIdentifier = api.getId();
-
-        Map<String, Environment> environments = APIUtil.getEnvironments(tenantDomain);
+        // Validate resource type and API type compatibility
+        if (APIConstants.WSDL_RESOURCE_TYPE.equalsIgnoreCase(resourceType)) {
+            if (!APIConstants.API_TYPE_SOAP.equalsIgnoreCase(api.getType())) {
+                throw new APIManagementException(
+                        ExceptionCodes.from(ExceptionCodes.API_TYPE_INCOMPATIBLE_WITH_RESOURCE, resourceType,
+                                api.getType()));
+            }
+        }
+        Map<String, Environment> environments = APIUtil.getEnvironments(organization);
         if (environments != null && environments.size() > 0) {
             if (StringUtils.isEmpty(environmentName)) {
                 environmentName = api.getEnvironments().iterator().next();
             }
-
             Environment selectedEnvironment = null;
             for (Environment environment : environments.values()) {
                 if (environment.getName().equals(environmentName)) {
@@ -1303,33 +1300,33 @@ public class ApisApiServiceImpl implements ApisApiService {
                     break;
                 }
             }
-
             if (selectedEnvironment == null) {
                 throw new APIManagementException(
                         ExceptionCodes.from(ExceptionCodes.INVALID_GATEWAY_ENVIRONMENT, environmentName));
             }
 
-            String generatedUrl = null;
-
-            if (resourceType.equalsIgnoreCase(APIConstants.WSDL)) {
+            if (APIConstants.WSDL_RESOURCE_TYPE.equalsIgnoreCase(resourceType)) {
                 URI baseUrl;
-                if (!Objects.equals(tenantDomain, APIConstants.SUPER_TENANT_DOMAIN)) {
+                if (!APIConstants.SUPER_TENANT_DOMAIN.equalsIgnoreCase(organization)) {
                     baseUrl = messageContext.getUriInfo().getBaseUriBuilder().path(RestApiConstants.RESOURCE_PATH_APIS)
                             .path(apiId).path(resourceType.toLowerCase())
-                            .queryParam(APIConstants.GatewayNotification.ENVIRONMENT_NAME,
+                            .queryParam(APIConstants.RestApiConstants.ENVIRONMENT_NAME,
                                     selectedEnvironment.getName())
-                            .queryParam(RestApiConstants.QUERY_PARAM_X_WSO2_TENANT, tenantDomain).build();
+                            .queryParam(RestApiConstants.QUERY_PARAM_X_WSO2_TENANT, organization).build();
                 } else {
                     baseUrl = messageContext.getUriInfo().getBaseUriBuilder().path(RestApiConstants.RESOURCE_PATH_APIS)
                             .path(apiId).path(resourceType.toLowerCase())
-                            .queryParam(APIConstants.GatewayNotification.ENVIRONMENT_NAME,
+                            .queryParam(APIConstants.RestApiConstants.ENVIRONMENT_NAME,
                                     selectedEnvironment.getName()).build();
                 }
-
-                generatedUrl = apiConsumer.generateUrlToWSDL(apiId, resourceType, tenantDomain, baseUrl);
+                if (APIConstants.PERMISSION_NOT_RESTRICTED.equalsIgnoreCase(api.getVisibility())) {
+                    generatedUrl = String.valueOf(baseUrl);
+                } else {
+                    String separator = baseUrl.getQuery() == null ? "?" : "&";
+                    generatedUrl = RestApiCommonUtil.generateSignedUrl(String.valueOf(baseUrl), separator, apiId);
+                }
             }
             return Response.ok(generatedUrl).build();
-
         } else {
             throw new APIManagementException(
                     ExceptionCodes.from(ExceptionCodes.NO_GATEWAY_ENVIRONMENTS_ADDED, apiIdentifier.toString()));

@@ -689,7 +689,19 @@ public interface APIConsumer extends APIManager {
     ResourceFile getWSDL(API api, String environmentName, String environmentType, String organization)
             throws APIManagementException;
 
-    ResourceFile getWSDL(API api, Boolean includeMainWSDLContent, String environmentName, String environmentType,
+    /**
+     * Returns the WSDL ResourceFile (Single WSDL) for the provided API and environment details with an option
+     * to include main WSDL content in the response in ZIP scenario
+     *
+     * @param api                          API
+     * @param fileFormat       whether to include main WSDL content in the response
+     * @param environmentName              environment name
+     * @param environmentType              environment type
+     * @param organization                 Identifier of an organization
+     * @return WSDL of the API
+     * @throws APIManagementException when error occurred while getting the WSDL
+     */
+    ResourceFile getWSDL(API api, String fileFormat, String environmentName, String environmentType,
             String organization) throws APIManagementException;
     /**
      * Returns application attributes defined in configuration
@@ -932,27 +944,13 @@ public interface APIConsumer extends APIManager {
             throws APIManagementException;
 
     /**
-     * This method is used to generate a URL to download API resources such as WSDL, Swagger, OpenAPI etc.
-     *
-     * @param apiId        API UUID
-     * @param resourceType Type of the resource (wsdl, swagger, openapi)
-     * @param organization Identifier of an organization
-     * @return Generated URL as a string
-     * @throws APIManagementException if an error occurs while generating the URL
-     */
-    String generateUrlToWSDL(String apiId, String resourceType, String organization, URI baseUrl)
-            throws APIManagementException;
-
-    /**
      * This method is used to validate the signed URL and retrieve the API information related to the URL.
      *
-     * @param exp          Expiry time of the signed URL
-     * @param sig          Signature of the signed URL
      * @param apiId        API UUID
      * @param organization Identifier of an organization
      * @return API information related to the signed URL
      * @throws APIManagementException if an error occurs while validating the signed URL or retrieving API information
      */
-    API getAPIBySignedUrlValidation(long exp, String sig, String apiId, String organization)
+    API getAPIWithoutPermissionCheck(String apiId, String organization)
             throws APIManagementException;
 }
