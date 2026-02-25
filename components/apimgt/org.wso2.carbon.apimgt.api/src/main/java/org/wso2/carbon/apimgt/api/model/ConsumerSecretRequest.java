@@ -41,6 +41,8 @@ public class ConsumerSecretRequest {
     }
 
     public void putAll(Map<String,Object> parameters){
-        this.parameters.putAll(parameters);
+        if (parameters != null) {
+            this.parameters.putAll(parameters);
+        }
     }
 }
