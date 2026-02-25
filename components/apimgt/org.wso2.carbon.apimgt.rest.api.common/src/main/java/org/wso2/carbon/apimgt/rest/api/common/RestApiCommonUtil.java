@@ -977,7 +977,6 @@ public class RestApiCommonUtil {
     }
 
     protected static byte[] getHmacKeyBytes() throws APIManagementException {
-        // TODO: resolve
         String base64Key = ServiceReferenceHolder.getInstance().getAPIManagerConfigurationService()
                 .getAPIManagerConfiguration().getFirstProperty(APIConstants.DEVPORTAL_URL_GENERATION_SECRET);
 
