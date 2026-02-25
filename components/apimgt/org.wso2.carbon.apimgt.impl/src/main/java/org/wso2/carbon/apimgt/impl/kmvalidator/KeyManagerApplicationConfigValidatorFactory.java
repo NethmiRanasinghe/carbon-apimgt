@@ -20,13 +20,15 @@ package org.wso2.carbon.apimgt.impl.kmvalidator;
 
 import org.wso2.carbon.apimgt.api.model.AppConfigConstraintType;
 import org.wso2.carbon.apimgt.api.model.KeyManagerApplicationConfigValidator;
-import static org.jboss.util.property.jmx.SystemPropertyClassValue.log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Factory class to retrieve the appropriate validator for a given constraint type.
  */
 public class KeyManagerApplicationConfigValidatorFactory {
-
+    
+    protected static Log log = LogFactory.getLog(KeyManagerApplicationConfigValidatorFactory.class);
     /**
      * Returns a new instance of the validator for the specified type.
      * New instances are returned because validators maintain state (error messages).
