@@ -351,6 +351,11 @@ public class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         }
 
         KeyManager keyManager = KeyManagerHolder.getKeyManagerInstance(tenantDomain, keyManagerName);
+        if (keyManager == null) {
+            throw new APIManagementException(
+                    "Key Manager " + keyManagerName + " not initialized in tenant " + tenantDomain + ".",
+                    ExceptionCodes.KEY_MANAGER_NOT_REGISTERED);
+        }
         return keyManager.generateNewApplicationConsumerSecret(consumerSecretRequest);
     }
 
@@ -379,6 +384,11 @@ public class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         }
 
         KeyManager keyManager = KeyManagerHolder.getKeyManagerInstance(tenantDomain, keyManagerName);
+        if (keyManager == null) {
+            throw new APIManagementException(
+                    "Key Manager " + keyManagerName + " not initialized in tenant " + tenantDomain + ".",
+                    ExceptionCodes.KEY_MANAGER_NOT_REGISTERED);
+        }
         return keyManager.retrieveApplicationConsumerSecrets(clientId);
     }
 
@@ -408,6 +418,11 @@ public class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         }
 
         KeyManager keyManager = KeyManagerHolder.getKeyManagerInstance(tenantDomain, keyManagerName);
+        if (keyManager == null) {
+            throw new APIManagementException(
+                    "Key Manager " + keyManagerName + " not initialized in tenant " + tenantDomain + ".",
+                    ExceptionCodes.KEY_MANAGER_NOT_REGISTERED);
+        }
         keyManager.deleteApplicationConsumerSecret(secretId, consumerSecretRequest);
     }
 
