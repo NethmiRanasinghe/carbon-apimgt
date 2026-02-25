@@ -1328,8 +1328,7 @@ public class ApisApiServiceImpl implements ApisApiService {
 
                 generatedUrl = apiConsumer.generateUrlToWSDL(apiId, resourceType, tenantDomain, baseUrl);
             }
-            Map<String, String> resp = Collections.singletonMap("url", generatedUrl);
-            return Response.ok(resp).build();
+            return Response.ok(generatedUrl).build();
 
         } else {
             throw new APIManagementException(

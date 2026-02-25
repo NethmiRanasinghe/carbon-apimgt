@@ -636,6 +636,7 @@ paths:
         - $ref: '#/components/parameters/requestedTenant'
         - $ref: '#/components/parameters/exp'
         - $ref: '#/components/parameters/sig'
+        - $ref: '#/components/parameters/requestedTenant-Q'
       responses:
         200:
           description: |
@@ -651,10 +652,6 @@ paths:
               description: |
                 Date and time the resource has been modifed the last time.
                 Used by caches, or in conditional requests (Will be supported in future).
-              schema:
-                type: string
-            filename:
-              description: The filename for the WSDL/ZIP file
               schema:
                 type: string
           content: {}
@@ -4610,7 +4607,7 @@ paths:
   /apis/{apiId}/generate-url:
     post:
       tags:
-        - Resources
+        - APIs
       summary: Generate a URL to download a resource for an API
       description: >-
         Generate a download URL for an API resource (WSDL / Swagger / OpenAPI).
@@ -4629,6 +4626,7 @@ paths:
               - openapi
         - $ref: '#/components/parameters/environmentName'
         - $ref: '#/components/parameters/apiId'
+        - $ref: '#/components/parameters/requestedTenant'
       responses:
         '200':
           description: OK. Returns JSON with the generated download URL.

@@ -180,14 +180,14 @@ public class APIManagerConfiguration {
     private static boolean isMCPSupportEnabled = true;
     private static String devportalMode = APIConstants.DEVPORTAL_MODE_HYBRID;
     private static volatile boolean isRuntimeReadOnly = false;
-    private static String hmacSecret;
+    private static String urlGenSecret;
 
-    public static String getHmacSecret() {
-        return hmacSecret;
+    public static String getUrlGenSecret() {
+        return urlGenSecret;
     }
 
-    public static void setHmacSecret(String hmacSecret) {
-        APIManagerConfiguration.hmacSecret = hmacSecret;
+    public static void setUrlGenSecret(String urlGenSecret) {
+        APIManagerConfiguration.urlGenSecret = urlGenSecret;
     }
 
     public Map<String, List<String>> getRestApiJWTAuthAudiences() {
@@ -1035,8 +1035,8 @@ public class APIManagerConfiguration {
         } else if (log.isDebugEnabled()) {
             log.debug("Devportal mode is not specified. Using default: " + devportalMode);
         }
-        OMElement devportalHMACSecret = omElement.getFirstChildWithName(new QName("HMACSecret"));
-        setHmacSecret(MiscellaneousUtil.resolve(devportalHMACSecret, secretResolver));
+        OMElement devportalUrlGenSecret = omElement.getFirstChildWithName(new QName("URLGenSecret"));
+        setUrlGenSecret(MiscellaneousUtil.resolve(devportalUrlGenSecret, secretResolver));
     }
 
     private void setOrgBasedAccessControlConfigs(OMElement element) {

@@ -160,6 +160,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,7 +174,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -5208,8 +5208,10 @@ APIConstants.AuditLogConstants.DELETED, this.username);
         try {
             byte[] signedString = hmacSHA256((apiUUID + ":" + exp), getHmacKeyBytes());
             String expectedSignature = hexFromBytes(signedString);
-            if (!expectedSignature.equals(sig)) {
-                throw new APIManagementException("Provided URL is unauthorized for API UUID: " + apiUUID, ExceptionCodes.WSDL_URL_INVALID);
+            if (sig == null || !MessageDigest.isEqual(expectedSignature.getBytes(StandardCharsets.UTF_8),
+                    sig.getBytes(StandardCharsets.UTF_8))) {
+                throw new APIManagementException("Provided URL is unauthorized for API UUID: " + apiUUID,
+                        ExceptionCodes.WSDL_URL_INVALID);
             }
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new APIManagementException("Error validating HMAC signature for API URL: " + apiUUID, e);
@@ -5226,7 +5228,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
 
     protected byte[] getHmacKeyBytes() throws APIManagementException {
         String base64Key = ServiceReferenceHolder.getInstance().getAPIManagerConfigurationService()
-                .getAPIManagerConfiguration().getHmacSecret();
+                .getAPIManagerConfiguration().getUrlGenSecret();
         if (StringUtils.isEmpty(base64Key)) {
             throw new APIManagementException("Could not resolve HMAC secret key from API Manager Configuration.");
         }
