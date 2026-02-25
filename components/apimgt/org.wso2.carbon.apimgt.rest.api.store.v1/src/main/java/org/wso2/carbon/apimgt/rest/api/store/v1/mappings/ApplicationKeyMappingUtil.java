@@ -203,6 +203,9 @@ public class ApplicationKeyMappingUtil {
      * @return ConsumerSecretDTO object
      */
     public static ConsumerSecretDTO fromConsumerSecretToDTO(ConsumerSecretInfo consumerSecret) {
+        if (consumerSecret == null) {
+            return null;
+        }
         ConsumerSecretDTO consumerSecretDTO = new ConsumerSecretDTO();
         consumerSecretDTO.setSecretId(consumerSecret.getSecretId());
         consumerSecretDTO.secretValue(consumerSecret.getClientSecret());
@@ -218,6 +221,11 @@ public class ApplicationKeyMappingUtil {
      */
     public static ConsumerSecretListDTO fromConsumerSecretListToDTO(List<ConsumerSecretInfo> consumerSecrets) {
         ConsumerSecretListDTO consumerSecretListDTO = new ConsumerSecretListDTO();
+        if (consumerSecrets == null) {
+            consumerSecretListDTO.setCount(0);
+            consumerSecretListDTO.setList(new ArrayList<>());
+            return consumerSecretListDTO;
+        }
         List<ConsumerSecretDTO> consumerSecretDTOs = new ArrayList<>();
         for (ConsumerSecretInfo consumerSecret : consumerSecrets) {
             consumerSecretDTOs.add(fromConsumerSecretToDTO(consumerSecret));

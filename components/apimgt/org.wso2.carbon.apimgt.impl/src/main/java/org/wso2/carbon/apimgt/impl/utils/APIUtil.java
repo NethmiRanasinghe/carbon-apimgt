@@ -4902,7 +4902,7 @@ public final class APIUtil {
 
         // Show first 3 characters, mask the rest so total = 16
         int visibleChars = Math.min(3, secret.length());
-        int maskedPartLength = Math.max(16 - visibleChars, 0);
+        int maskedPartLength = Math.max(CONSUMER_SECRET_MASK_LENGTH - visibleChars, 0);
         String visiblePart = secret.substring(0, visibleChars);
         return visiblePart + generateMask(maskedPartLength);
     }

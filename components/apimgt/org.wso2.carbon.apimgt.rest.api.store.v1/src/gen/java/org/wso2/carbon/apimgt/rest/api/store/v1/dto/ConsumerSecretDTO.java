@@ -54,7 +54,7 @@ public class ConsumerSecretDTO   {
   }
 
   
-  @ApiModelProperty(example = "s3cr3tV@lu3", value = "The actual secret string")
+  @ApiModelProperty(example = "***r3tV@lu3", value = "The actual secret string")
   @JsonProperty("secretValue")
   public String getSecretValue() {
     return secretValue;

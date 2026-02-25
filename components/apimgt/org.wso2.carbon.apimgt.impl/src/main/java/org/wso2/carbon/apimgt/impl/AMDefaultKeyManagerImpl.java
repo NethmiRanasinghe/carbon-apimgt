@@ -973,7 +973,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
 
         Object multipleClientSecretsAllowedParameter =
                 configuration.getParameter(APIConstants.KeyManager.ENABLE_MULTIPLE_CLIENT_SECRETS);
-        if (multipleClientSecretsAllowedParameter != null) {
+        if (multipleClientSecretsAllowedParameter instanceof Boolean) {
             multipleClientSecretsAllowed = (boolean) multipleClientSecretsAllowedParameter;
         }
 

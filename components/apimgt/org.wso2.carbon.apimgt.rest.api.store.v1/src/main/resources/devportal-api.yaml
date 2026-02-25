@@ -7450,7 +7450,7 @@ components:
         secretValue:
           type: string
           description: The actual secret string
-          example: s3cr3tV@lu3
+          example: "***r3tV@lu3"
         additionalProperties:
           type: object
           description: Additional dynamic properties for the secret creation request.
@@ -7597,7 +7597,7 @@ components:
             moreInfo: ""
             error: []
     Forbidden:
-      description: Forbidden. The user do not have permission to perform this action.
+      description: Forbidden. The user does not have permission to perform this action.
       content:
         application/json:
           schema:
