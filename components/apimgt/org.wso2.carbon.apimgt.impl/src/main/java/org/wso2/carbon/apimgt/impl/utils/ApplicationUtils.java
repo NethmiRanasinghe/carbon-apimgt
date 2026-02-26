@@ -201,11 +201,12 @@ public class ApplicationUtils {
         Application application = apiConsumer.getApplicationById(applicationId);
         return isUserOwnerOfApplication(application, username);
     }
+
     /**
      * Validates the application configuration against the constraints defined in the Key Manager.
      *
-     * @param keyManager           KeyManagerConfigurationDTO
-     * @param jsonInput            Map that contains Additional properties from the request (JSON string)
+     * @param keyManager KeyManagerConfigurationDTO
+     * @param jsonInput  Map that contains Additional properties from the request (JSON string)
      * @throws APIManagementException If validation fails
      */
     public static void validateKeyManagerAppConfiguration(KeyManagerConfigurationDTO keyManager, String jsonInput)
@@ -274,8 +275,8 @@ public class ApplicationUtils {
                 continue;
             }
 
-            KeyManagerApplicationConfigValidator validator =
-                    KeyManagerApplicationConfigValidatorFactory.getValidator(constraintType);
+            KeyManagerApplicationConfigValidator validator = KeyManagerApplicationConfigValidatorFactory.getValidator(
+                    constraintType);
 
             if (validator != null) {
                 Object constraintValue = constraintConfig.get(APIConstants.KeyManager.CONSTRAINT_VALUE);
@@ -298,13 +299,8 @@ public class ApplicationUtils {
         // Throw combined exception if there were any errors
         if (!errorMessages.isEmpty()) {
             String combinedMessage = String.join("; ", errorMessages);
-            throw new APIManagementException(
-                    "Constraint validation failed: " + combinedMessage,
-                    ExceptionCodes.from(
-                            ExceptionCodes.INVALID_APPLICATION_ADDITIONAL_PROPERTIES,
-                            combinedMessage
-                    )
-            );
+            throw new APIManagementException("Constraint validation failed: " + combinedMessage,
+                    ExceptionCodes.from(ExceptionCodes.INVALID_APPLICATION_ADDITIONAL_PROPERTIES, combinedMessage));
         }
     }
 }

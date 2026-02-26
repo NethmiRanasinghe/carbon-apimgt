@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DTO that holds metadata for a constraint field.
- * Used to define fields that support validation constraints in Key Manager application configurations.
+ * DTO that holds metadata for a constraint field. Used to define fields that support validation constraints in Key
+ * Manager application configurations.
  */
 public class ConstraintConfigDto {
 
@@ -38,8 +38,8 @@ public class ConstraintConfigDto {
     private boolean multiple;
     private Map<String, Object> defaultConstraints = new HashMap<>(); // Optional defaults
 
-    public ConstraintConfigDto(String name, String type, List values, boolean multiple, String label,
-                               String tooltip, AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints) {
+    public ConstraintConfigDto(String name, String type, List values, boolean multiple, String label, String tooltip,
+            AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints) {
         this.name = name;
         this.label = label;
         this.type = type;

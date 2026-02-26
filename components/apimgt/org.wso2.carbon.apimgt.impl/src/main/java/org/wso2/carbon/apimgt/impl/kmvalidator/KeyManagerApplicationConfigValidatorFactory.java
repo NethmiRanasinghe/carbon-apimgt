@@ -27,11 +27,12 @@ import org.apache.commons.logging.LogFactory;
  * Factory class to retrieve the appropriate validator for a given constraint type.
  */
 public class KeyManagerApplicationConfigValidatorFactory {
-    
+
     protected static Log log = LogFactory.getLog(KeyManagerApplicationConfigValidatorFactory.class);
+
     /**
-     * Returns a new instance of the validator for the specified type.
-     * New instances are returned because validators maintain state (error messages).
+     * Returns a new instance of the validator for the specified type. New instances are returned because validators
+     * maintain state (error messages).
      *
      * @param type The {@link AppConfigConstraintType}
      * @return {@link KeyManagerApplicationConfigValidator} implementation
@@ -43,17 +44,17 @@ public class KeyManagerApplicationConfigValidatorFactory {
         }
 
         switch (type) {
-            case RANGE:
-            case MIN:
-            case MAX:
-                return new RangeValidator(type);
-            case REGEX:
-                return new RegexValidator();
-            case ENUM:
-                return new EnumValidator();
-            default:
-                log.warn("No validator found for constraint type: " + type);
-                return null;
+        case RANGE:
+        case MIN:
+        case MAX:
+            return new RangeValidator(type);
+        case REGEX:
+            return new RegexValidator();
+        case ENUM:
+            return new EnumValidator();
+        default:
+            log.warn("No validator found for constraint type: " + type);
+            return null;
         }
     }
 }

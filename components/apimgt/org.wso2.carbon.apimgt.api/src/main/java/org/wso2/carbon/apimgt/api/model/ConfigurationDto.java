@@ -177,9 +177,9 @@ public class ConfigurationDto {
     }
 
     public ConfigurationDto(String name, String label, String type, String tooltip, Object defaultValue,
-                            boolean required, boolean mask, List values, boolean multiple, boolean updateDisabled,
-                            AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints,
-                            String constraintLabel, String constraintTooltip) {
+            boolean required, boolean mask, List values, boolean multiple, boolean updateDisabled,
+            AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints, String constraintLabel,
+            String constraintTooltip) {
 
         this.name = name;
         this.label = label;
@@ -192,16 +192,8 @@ public class ConfigurationDto {
         this.multiple = multiple;
         this.updateDisabled = updateDisabled;
         if (constraintType != null) {
-            this.constraint = new ConstraintConfigDto(
-                name,
-                type,
-                values,
-                true,
-                constraintLabel,
-                constraintTooltip,
-                constraintType,
-                defaultConstraints
-            );
+            this.constraint = new ConstraintConfigDto(name, type, values, true, constraintLabel, constraintTooltip,
+                    constraintType, defaultConstraints);
         }
     }
 
