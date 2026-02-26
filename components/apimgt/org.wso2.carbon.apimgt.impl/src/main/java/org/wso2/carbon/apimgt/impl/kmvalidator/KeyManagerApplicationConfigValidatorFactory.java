@@ -39,17 +39,17 @@ public class KeyManagerApplicationConfigValidatorFactory {
             return null;
         }
         switch (type) {
-        case RANGE:
-        case MIN:
-        case MAX:
-            return new RangeValidator(type);
-        case REGEX:
-            return new RegexValidator();
-        case ENUM:
-            return new EnumValidator();
-        default:
-            log.warn("No validator found for constraint type: " + type);
-            return null;
+            case RANGE:
+            case MIN:
+            case MAX:
+                return new RangeValidator(type);
+            case REGEX:
+                return new RegexValidator();
+            case ENUM:
+                return new EnumValidator();
+            default:
+                log.warn("No validator found for constraint type: " + type);
+                return null;
         }
     }
 }
