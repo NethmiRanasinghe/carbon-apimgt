@@ -211,21 +211,15 @@ public class ApplicationUtils {
      */
     public static void validateKeyManagerAppConfiguration(KeyManagerConfigurationDTO keyManager, String jsonInput)
             throws APIManagementException {
-
         Map<String, Object> kmProps = keyManager.getAdditionalProperties();
         if (kmProps == null) {
             return;
         }
-
         Object constraintsObj = kmProps.get(APIConstants.KeyManager.CONSTRAINTS);
         if (!(constraintsObj instanceof Map)) {
             return;
         }
-
-        //noinspection unchecked
         Map<String, Map<String, Object>> constraintsMap = (Map<String, Map<String, Object>>) constraintsObj;
-
-        // Parse input JSON
         Map<String, Object> inputProps;
         try {
             JSONParser parser = new JSONParser();
@@ -233,61 +227,47 @@ public class ApplicationUtils {
             if (jsonObject == null) {
                 return;
             }
-
-            // Get additionalProperties from input JSON
             Object additionalProperties = jsonObject.get(APIConstants.JSON_ADDITIONAL_PROPERTIES);
             if (additionalProperties == null) {
                 return;
             }
-
             if (additionalProperties instanceof Map) {
                 inputProps = (Map<String, Object>) additionalProperties;
             } else {
                 inputProps = new Gson().fromJson(additionalProperties.toString(), Map.class);
             }
-
         } catch (ParseException e) {
             throw new APIManagementException("Failed to parse input JSON", e);
         }
-
-        // Collect all error messages
         List<String> errorMessages = new ArrayList<>();
 
-        // Validate each constraint
         for (Map.Entry<String, Map<String, Object>> entry : constraintsMap.entrySet()) {
             String fieldName = entry.getKey();
             Map<String, Object> constraintConfig = entry.getValue();
             if (constraintConfig == null) {
                 continue;
             }
-
             if (!inputProps.containsKey(fieldName)) {
                 errorMessages.add("Missing input for constrained property: " + fieldName);
                 continue;
             }
-
             Object inputValue = inputProps.get(fieldName);
             String constraintTypeStr = (String) constraintConfig.get(APIConstants.KeyManager.CONSTRAINT_TYPE);
             AppConfigConstraintType constraintType = AppConfigConstraintType.fromString(constraintTypeStr);
-
             if (constraintType == null) {
                 // Ignore unknown types
                 continue;
             }
-
             KeyManagerApplicationConfigValidator validator = KeyManagerApplicationConfigValidatorFactory.getValidator(
                     constraintType);
-
             if (validator != null) {
                 Object constraintValue = constraintConfig.get(APIConstants.KeyManager.CONSTRAINT_VALUE);
                 Map<String, Object> constraints = Collections.emptyMap();
-
                 if (constraintValue instanceof Map) {
                     constraints = (Map<String, Object>) constraintValue;
                 } else if (constraintValue != null) {
                     constraints = new Gson().fromJson(constraintValue.toString(), Map.class);
                 }
-
                 if (!validator.validate(inputValue, constraints)) {
                     String fieldError = "Property '" + fieldName + "' is invalid. " + validator.getErrorMessage();
                     log.error("Validation failed for property '" + fieldName + "': " + validator.getErrorMessage());
@@ -295,8 +275,6 @@ public class ApplicationUtils {
                 }
             }
         }
-
-        // Throw combined exception if there were any errors
         if (!errorMessages.isEmpty()) {
             String combinedMessage = String.join("; ", errorMessages);
             throw new APIManagementException("Constraint validation failed: " + combinedMessage,

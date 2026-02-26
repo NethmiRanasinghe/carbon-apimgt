@@ -185,14 +185,10 @@ public class KeyManagerMappingUtil {
      */
     private static ApplicationConfigurationConstraintDTO getConstraintForField(
             ConfigurationDto configurationDto, Map<String, Object> savedConstraints) {
-        
-        // If user has saved constraints, use only those
         if (savedConstraints != null) {
             return getSavedConstraintFromKeyManager(configurationDto.getName(), savedConstraints);
         }
-        
-        // Otherwise, use default constraint from the connector
-        return getDefaultConstraintFromConnector(configurationDto);
+        return null;
     }
 
     /**
@@ -212,24 +208,6 @@ public class KeyManagerMappingUtil {
         return createConstraintDTO(
                 (String) constraintMap.get(APIConstants.KeyManager.CONSTRAINT_TYPE),
                 constraintMap.get(APIConstants.KeyManager.CONSTRAINT_VALUE)
-        );
-    }
-
-    /**
-     * Retrieves default constraint from connector.
-     */
-    private static ApplicationConfigurationConstraintDTO getDefaultConstraintFromConnector(ConfigurationDto configurationDto) {
-
-        if (!configurationDto.hasConstraint()) {
-            return null;
-        }
-        if (configurationDto.getConstraint().getConstraintType() == null ||
-                configurationDto.getConstraint().getDefaultConstraints() == null) {
-            return null;
-        }
-        return createConstraintDTO(
-                configurationDto.getConstraint().getConstraintType().toString(),
-                configurationDto.getConstraint().getDefaultConstraints()
         );
     }
 

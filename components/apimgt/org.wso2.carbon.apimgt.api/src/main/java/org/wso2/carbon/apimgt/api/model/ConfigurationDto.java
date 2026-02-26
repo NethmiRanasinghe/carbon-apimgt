@@ -196,5 +196,4 @@ public class ConfigurationDto {
                     constraintType, defaultConstraints);
         }
     }
-
 }

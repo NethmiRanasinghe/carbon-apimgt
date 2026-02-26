@@ -21,17 +21,14 @@ package org.wso2.carbon.apimgt.impl.kmvalidator;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.AppConfigConstraintType;
 import org.wso2.carbon.apimgt.api.model.KeyManagerApplicationConfigValidator;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 
 import java.util.Map;
 
-/**
- * Validator implementation for Range-based constraints.
- */
 public class RangeValidator implements KeyManagerApplicationConfigValidator {
 
     private String errorMessage;
     private AppConfigConstraintType type;
-
     public RangeValidator(AppConfigConstraintType type) {
         this.type = type;
     }
@@ -39,26 +36,24 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
         if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MIN) {
-            if (!constraints.containsKey("min")) {
+            if (!constraints.containsKey(APIConstants.KeyManager.CONSTRAINT_FIELD_MIN)) {
                 throw new APIManagementException("Minimum value ('min') not found for range constraint.");
             }
-            if (!(constraints.get("min") instanceof Number)) {
+            if (!(constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_MIN) instanceof Number)) {
                 throw new APIManagementException("Minimum value ('min') must be a number.");
             }
         }
-
         if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MAX) {
-            if (!constraints.containsKey("max")) {
+            if (!constraints.containsKey(APIConstants.KeyManager.CONSTRAINT_FIELD_MAX)) {
                 throw new APIManagementException("Maximum value ('max') not found for range constraint.");
             }
-            if (!(constraints.get("max") instanceof Number)) {
+            if (!(constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_MAX) instanceof Number)) {
                 throw new APIManagementException("Maximum value ('max') must be a number.");
             }
         }
-
         if (type == AppConfigConstraintType.RANGE) {
-            double min = ((Number) constraints.get("min")).doubleValue();
-            double max = ((Number) constraints.get("max")).doubleValue();
+            double min = ((Number) constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_MIN)).doubleValue();
+            double max = ((Number) constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_MAX)).doubleValue();
             if (min > max) {
                 throw new APIManagementException("Minimum value cannot be greater than maximum value.");
             }
@@ -75,32 +70,28 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
                 return false;
             }
         }
-
         double val = ((Number) inputValue).doubleValue();
 
         if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MIN) {
-            if (constraints.containsKey("min")) {
-                double min = ((Number) constraints.get("min")).doubleValue();
+            if (constraints.containsKey(APIConstants.KeyManager.CONSTRAINT_FIELD_MIN)) {
+                double min = ((Number) constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_MIN)).doubleValue();
                 if (val < min) {
                     errorMessage = "Value is less than minimum";
                     return false;
                 }
             }
         }
-
         if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MAX) {
-            if (constraints.containsKey("max")) {
-                double max = ((Number) constraints.get("max")).doubleValue();
+            if (constraints.containsKey(APIConstants.KeyManager.CONSTRAINT_FIELD_MAX)) {
+                double max = ((Number) constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_MAX)).doubleValue();
                 if (val > max) {
                     errorMessage = "Value is greater than maximum";
                     return false;
                 }
             }
         }
-
         return true;
     }
-
     @Override
     public String getErrorMessage() {
         return errorMessage;

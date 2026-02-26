@@ -20,21 +20,18 @@ package org.wso2.carbon.apimgt.impl.kmvalidator;
 
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.KeyManagerApplicationConfigValidator;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-/**
- * Validator implementation for Regex-based constraints.
- */
 public class RegexValidator implements KeyManagerApplicationConfigValidator {
-
     private String errorMessage;
 
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
-        Object regexObj = constraints.get("pattern");
+        Object regexObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_PATTERN);
         if (regexObj == null) {
             throw new APIManagementException("Regex pattern not found in constraints.");
         }
@@ -52,20 +49,17 @@ public class RegexValidator implements KeyManagerApplicationConfigValidator {
             errorMessage = "Input value is null.";
             return false;
         }
-
         String value = inputValue.toString();
-        Object regexObj = constraints.get("pattern");
+        Object regexObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_PATTERN);
         if (regexObj == null) {
             errorMessage = "Regex pattern not found in constraints.";
             return false;
         }
         String regex = regexObj.toString();
-
         if (!Pattern.matches(regex, value)) {
             errorMessage = "Value does not match pattern.";
             return false;
         }
-
         return true;
     }
 

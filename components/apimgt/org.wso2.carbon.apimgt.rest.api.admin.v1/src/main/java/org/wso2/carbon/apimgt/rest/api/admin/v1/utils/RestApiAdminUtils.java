@@ -418,7 +418,6 @@ public class RestApiAdminUtils {
      */
     public static void validateKeyManagerConstraints(Map<String, Object> additionalProperties)
             throws APIManagementException {
-
         if (additionalProperties == null) {
             return;
         }
@@ -433,7 +432,6 @@ public class RestApiAdminUtils {
             return;
         }
         List<String> errorMessages = new ArrayList<>();
-        // Validate each constraint configuration
         for (Map.Entry<String, Map<String, Object>> entry : constraintsMap.entrySet()) {
             String fieldName = entry.getKey();
             Object rawConfig = entry.getValue();
@@ -449,7 +447,6 @@ public class RestApiAdminUtils {
             if (constraintTypeStr == null) {
                 errorMessages.add("Missing constraint type for field '" + fieldName + "'");
                 continue;
-
             }
             AppConfigConstraintType constraintType = AppConfigConstraintType.fromString(constraintTypeStr);
             if (constraintType == null) {
@@ -487,5 +484,4 @@ public class RestApiAdminUtils {
             );
         }
     }
-
 }

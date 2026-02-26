@@ -3055,6 +3055,10 @@ public final class APIConstants {
         public static final String CONSTRAINTS = "constraints";
         public static final String CONSTRAINT_TYPE = "type";
         public static final String CONSTRAINT_VALUE = "value";
+        public static final String CONSTRAINT_FIELD_MAX = "max";
+        public static final String CONSTRAINT_FIELD_MIN = "min";
+        public static final String CONSTRAINT_FIELD_PATTERN = "pattern";
+        public static final String CONSTRAINT_FIELD_ALLOWED = "allowed";
         public static final String EVENT_RECEIVER_CONFIGURATION = "EventReceiverConfiguration";
 
         public static final String ENABLE = "Enable";

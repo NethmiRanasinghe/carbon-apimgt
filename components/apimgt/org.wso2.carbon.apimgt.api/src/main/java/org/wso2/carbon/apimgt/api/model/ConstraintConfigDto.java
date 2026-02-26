@@ -29,14 +29,14 @@ import java.util.Map;
  */
 public class ConstraintConfigDto {
 
-    private String name;           // Matches the form field name (e.g., "application_access_token_expiry_time")
-    private String label;          // UI Label (e.g., "Access Token Expiry")
-    private String type;           // UI Type (e.g., "input", "select")
-    private String tooltip;        // UI Tooltip
-    private AppConfigConstraintType constraintType; // Suggested Validator (e.g., RANGE, REGEX, ENUM)
+    private String name;
+    private String label;
+    private String type;
+    private String tooltip;
+    private AppConfigConstraintType constraintType;
     private List values = new ArrayList<>();
     private boolean multiple;
-    private Map<String, Object> defaultConstraints = new HashMap<>(); // Optional defaults
+    private Map<String, Object> defaultConstraints = new HashMap<>();
 
     public ConstraintConfigDto(String name, String type, List values, boolean multiple, String label, String tooltip,
             AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints) {

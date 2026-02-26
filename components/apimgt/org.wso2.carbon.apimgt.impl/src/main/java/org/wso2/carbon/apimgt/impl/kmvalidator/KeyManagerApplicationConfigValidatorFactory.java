@@ -23,11 +23,7 @@ import org.wso2.carbon.apimgt.api.model.KeyManagerApplicationConfigValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * Factory class to retrieve the appropriate validator for a given constraint type.
- */
 public class KeyManagerApplicationConfigValidatorFactory {
-
     protected static Log log = LogFactory.getLog(KeyManagerApplicationConfigValidatorFactory.class);
 
     /**
@@ -42,7 +38,6 @@ public class KeyManagerApplicationConfigValidatorFactory {
             log.debug("Constraint type is null");
             return null;
         }
-
         switch (type) {
         case RANGE:
         case MIN:

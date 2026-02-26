@@ -20,20 +20,18 @@ package org.wso2.carbon.apimgt.impl.kmvalidator;
 
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.KeyManagerApplicationConfigValidator;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * Validator implementation for Enum-based constraints.
- */
 public class EnumValidator implements KeyManagerApplicationConfigValidator {
 
     private String errorMessage;
 
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
-        Object allowedValuesObj = constraints.get("allowed");
+        Object allowedValuesObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_ALLOWED);
 
         if (allowedValuesObj == null) {
             throw new APIManagementException("Allowed values list ('allowed') not found for enum constraint.");
@@ -51,7 +49,7 @@ public class EnumValidator implements KeyManagerApplicationConfigValidator {
             return false;
         }
 
-        Object allowedValuesObj = constraints.get("allowed");
+        Object allowedValuesObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_ALLOWED);
 
         if (!(allowedValuesObj instanceof List)) {
             errorMessage = "Allowed values list not found in constraints.";
