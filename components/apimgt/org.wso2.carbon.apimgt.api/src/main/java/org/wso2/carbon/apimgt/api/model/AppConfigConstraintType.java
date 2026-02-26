@@ -22,6 +22,7 @@ package org.wso2.carbon.apimgt.api.model;
  * Enum to define the types of application configuration constraints.
  */
 public enum AppConfigConstraintType {
+
     RANGE("RANGE"),
     MIN("MIN"),
     MAX("MAX"),
@@ -30,19 +31,23 @@ public enum AppConfigConstraintType {
 
     private final String value;
     AppConfigConstraintType(String value) {
+
         this.value = value;
     }
 
     @Override
     public String toString() {
+
         return value;
     }
 
     public String getValue() {
+
         return value;
     }
 
     public static AppConfigConstraintType fromString(String text) {
+
         try {
             return AppConfigConstraintType.valueOf(text);
         } catch (IllegalArgumentException e) {

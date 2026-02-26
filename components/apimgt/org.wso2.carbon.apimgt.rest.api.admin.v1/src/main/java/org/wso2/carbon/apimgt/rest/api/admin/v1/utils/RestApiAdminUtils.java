@@ -418,6 +418,7 @@ public class RestApiAdminUtils {
      */
     public static void validateKeyManagerConstraints(Map<String, Object> additionalProperties)
             throws APIManagementException {
+
         if (additionalProperties == null) {
             return;
         }

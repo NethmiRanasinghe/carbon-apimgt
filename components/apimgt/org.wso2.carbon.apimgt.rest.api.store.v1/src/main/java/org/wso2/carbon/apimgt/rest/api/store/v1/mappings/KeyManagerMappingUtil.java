@@ -185,6 +185,7 @@ public class KeyManagerMappingUtil {
      */
     private static ApplicationConfigurationConstraintDTO getConstraintForField(
             ConfigurationDto configurationDto, Map<String, Object> savedConstraints) {
+
         if (savedConstraints != null) {
             return getSavedConstraintFromKeyManager(configurationDto.getName(), savedConstraints);
         }
@@ -215,6 +216,7 @@ public class KeyManagerMappingUtil {
      * Creates a constraint DTO with the given type and value.
      */
     private static ApplicationConfigurationConstraintDTO createConstraintDTO(String type, Object value) {
+        
         if (type == null && value == null) {
             return null;
         }

@@ -211,6 +211,7 @@ public class ApplicationUtils {
      */
     public static void validateKeyManagerAppConfiguration(KeyManagerConfigurationDTO keyManager, String jsonInput)
             throws APIManagementException {
+
         Map<String, Object> kmProps = keyManager.getAdditionalProperties();
         if (kmProps == null) {
             return;

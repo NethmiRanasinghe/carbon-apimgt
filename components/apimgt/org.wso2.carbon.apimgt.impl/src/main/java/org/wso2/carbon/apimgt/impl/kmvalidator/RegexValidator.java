@@ -27,10 +27,12 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class RegexValidator implements KeyManagerApplicationConfigValidator {
+
     private String errorMessage;
 
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
+
         Object regexObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_PATTERN);
         if (regexObj == null) {
             throw new APIManagementException("Regex pattern not found in constraints.");
@@ -45,6 +47,7 @@ public class RegexValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public boolean validate(Object inputValue, Map<String, Object> constraints) {
+
         if (inputValue == null) {
             errorMessage = "Input value is null.";
             return false;
@@ -65,6 +68,7 @@ public class RegexValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public String getErrorMessage() {
+
         return errorMessage;
     }
 }

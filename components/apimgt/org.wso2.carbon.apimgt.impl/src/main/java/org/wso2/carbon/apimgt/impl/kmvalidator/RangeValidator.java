@@ -29,12 +29,15 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
 
     private String errorMessage;
     private AppConfigConstraintType type;
+
     public RangeValidator(AppConfigConstraintType type) {
+
         this.type = type;
     }
 
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
+
         if (type == AppConfigConstraintType.RANGE || type == AppConfigConstraintType.MIN) {
             if (!constraints.containsKey(APIConstants.KeyManager.CONSTRAINT_FIELD_MIN)) {
                 throw new APIManagementException("Minimum value ('min') not found for range constraint.");
@@ -62,6 +65,7 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public boolean validate(Object inputValue, Map<String, Object> constraints) {
+
         if (!(inputValue instanceof Number)) {
             try {
                 inputValue = Double.parseDouble(inputValue.toString());
@@ -94,6 +98,7 @@ public class RangeValidator implements KeyManagerApplicationConfigValidator {
     }
     @Override
     public String getErrorMessage() {
+
         return errorMessage;
     }
 }

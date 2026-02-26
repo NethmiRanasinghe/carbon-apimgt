@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class KeyManagerApplicationConfigValidatorFactory {
+
     protected static Log log = LogFactory.getLog(KeyManagerApplicationConfigValidatorFactory.class);
 
     /**
@@ -34,6 +35,7 @@ public class KeyManagerApplicationConfigValidatorFactory {
      * @return {@link KeyManagerApplicationConfigValidator} implementation
      */
     public static KeyManagerApplicationConfigValidator getValidator(AppConfigConstraintType type) {
+
         if (type == null) {
             log.debug("Constraint type is null");
             return null;

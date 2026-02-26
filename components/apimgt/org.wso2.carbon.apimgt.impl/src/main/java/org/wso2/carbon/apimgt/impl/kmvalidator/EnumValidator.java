@@ -31,8 +31,8 @@ public class EnumValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public void validateMetadata(Map<String, Object> constraints) throws APIManagementException {
-        Object allowedValuesObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_ALLOWED);
 
+        Object allowedValuesObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_ALLOWED);
         if (allowedValuesObj == null) {
             throw new APIManagementException("Allowed values list ('allowed') not found for enum constraint.");
         }
@@ -44,11 +44,11 @@ public class EnumValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public boolean validate(Object inputValue, Map<String, Object> constraints) {
+
         if (inputValue == null) {
             errorMessage = "Input value is null.";
             return false;
         }
-
         Object allowedValuesObj = constraints.get(APIConstants.KeyManager.CONSTRAINT_FIELD_ALLOWED);
 
         if (!(allowedValuesObj instanceof List)) {
@@ -84,6 +84,7 @@ public class EnumValidator implements KeyManagerApplicationConfigValidator {
      * Helper method to check if a value is in the allowed values list.
      */
     private boolean isValueAllowed(Object value, List<?> allowedValues) {
+
         String valStr = value.toString();
         for (Object allowed : allowedValues) {
             if (allowed != null && allowed.toString().equals(valStr)) {
@@ -95,6 +96,7 @@ public class EnumValidator implements KeyManagerApplicationConfigValidator {
 
     @Override
     public String getErrorMessage() {
+
         return errorMessage;
     }
 }

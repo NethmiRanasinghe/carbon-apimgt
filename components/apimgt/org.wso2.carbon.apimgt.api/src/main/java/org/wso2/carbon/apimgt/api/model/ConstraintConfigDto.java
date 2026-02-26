@@ -40,6 +40,7 @@ public class ConstraintConfigDto {
 
     public ConstraintConfigDto(String name, String type, List values, boolean multiple, String label, String tooltip,
             AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints) {
+
         this.name = name;
         this.label = label;
         this.type = type;
@@ -53,66 +54,82 @@ public class ConstraintConfigDto {
     }
 
     public String getName() {
+
         return name;
     }
 
     public void setName(String name) {
+
         this.name = name;
     }
 
     public String getLabel() {
+
         return label;
     }
 
     public void setLabel(String label) {
+
         this.label = label;
     }
 
     public String getType() {
+
         return type;
     }
 
     public void setType(String type) {
+
         this.type = type;
     }
 
     public String getTooltip() {
+
         return tooltip;
     }
 
     public void setTooltip(String toolTip) {
+
         this.tooltip = toolTip;
     }
 
     public AppConfigConstraintType getConstraintType() {
+
         return constraintType;
     }
 
     public void setConstraintType(AppConfigConstraintType constraintType) {
+
         this.constraintType = constraintType;
     }
 
     public List getValues() {
+
         return values;
     }
 
     public void setValues(List values) {
+
         this.values = values;
     }
 
     public boolean isMultiple() {
+
         return multiple;
     }
 
     public void setMultiple(boolean multiple) {
+
         this.multiple = multiple;
     }
 
     public Map<String, Object> getDefaultConstraints() {
+
         return defaultConstraints;
     }
 
     public void setDefaultConstraints(Map<String, Object> defaultConstraints) {
+
         if (defaultConstraints != null) {
             this.defaultConstraints = defaultConstraints;
         } else {
@@ -121,6 +138,7 @@ public class ConstraintConfigDto {
     }
 
     public void addDefaultConstraint(String key, Object value) {
+
         this.defaultConstraints.put(key, value);
     }
 }

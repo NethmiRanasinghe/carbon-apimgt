@@ -149,6 +149,7 @@ public interface KeyManagerConnectorConfiguration {
      * Returns a list of metadata about configurations that has constraints.
      */
     default List<ConstraintConfigDto> getAvailableAppConfigConstraints() {
+
         if (this.getApplicationConfigurations() == null) {
             return Collections.emptyList();
         }

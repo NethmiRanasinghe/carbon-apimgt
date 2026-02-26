@@ -19,10 +19,12 @@ public class ConfigurationDto {
     private ConstraintConfigDto constraint;
 
     public boolean hasConstraint() {
+
         return this.constraint != null;
     }
 
     public ConstraintConfigDto getConstraint() {
+
         return this.constraint;
     }
 
