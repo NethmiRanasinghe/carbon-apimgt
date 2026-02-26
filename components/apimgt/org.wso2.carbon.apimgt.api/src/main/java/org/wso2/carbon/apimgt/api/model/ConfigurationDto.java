@@ -18,6 +18,11 @@ public class ConfigurationDto {
     private boolean updateDisabled = false;
     private ConstraintConfigDto constraint;
 
+    /**
+     * Checks whether a constraint is configured for this configuration item.
+     *
+     * @return {@code true} if a non-null {@link ConstraintConfigDto} is present, {@code false} otherwise
+     */
     public boolean hasConstraint() {
 
         return this.constraint != null;
@@ -178,6 +183,24 @@ public class ConfigurationDto {
         this.updateDisabled = updateDisabled;
     }
 
+    /**
+     * Constructor for ConfigurationDto.
+     *
+     * @param name               configuration key/name
+     * @param label              display label for the configuration
+     * @param type               input type (e.g., "input", "select")
+     * @param tooltip            tooltip/help text for the configuration
+     * @param defaultValue       default value for the configuration
+     * @param required           whether this configuration is required
+     * @param mask               whether the value should be masked (sensitive)
+     * @param values             list of allowed values (for enumerations)
+     * @param multiple           whether multiple values are allowed
+     * @param updateDisabled     whether updates to this configuration are disabled
+     * @param constraintType     type of constraint to apply; if null, no constraint is created
+     * @param defaultConstraints default constraint parameters (may be null)
+     * @param constraintLabel    label for the constraint UI
+     * @param constraintTooltip  tooltip for the constraint UI
+     */
     public ConfigurationDto(String name, String label, String type, String tooltip, Object defaultValue,
             boolean required, boolean mask, List values, boolean multiple, boolean updateDisabled,
             AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints, String constraintLabel,

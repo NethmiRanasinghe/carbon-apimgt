@@ -38,20 +38,32 @@ public class ConstraintConfigDto {
     private boolean multiple;
     private Map<String, Object> defaultConstraints = new HashMap<>();
 
-    public ConstraintConfigDto(String name, String type, List values, boolean multiple, String label, String tooltip,
-            AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints) {
+/**
+ * Constructs a ConstraintConfigDto.
+ *
+ * @param name               the field name
+ * @param type               the UI type of the field (for example "input" or "select")
+ * @param values             the allowed values for the field (may be empty)
+ * @param multiple           whether multiple selection/values are allowed
+ * @param label              the human-readable label for the field
+ * @param tooltip            helper text displayed to users for the field
+ * @param constraintType     the type of constraint applied to this field
+ * @param defaultConstraints map of default constraint keys to values; may be null
+ */
+public ConstraintConfigDto(String name, String type, List values, boolean multiple, String label, String tooltip,
+        AppConfigConstraintType constraintType, Map<String, Object> defaultConstraints) {
 
-        this.name = name;
-        this.label = label;
-        this.type = type;
-        this.tooltip = tooltip;
-        this.constraintType = constraintType;
-        this.values = values;
-        this.multiple = multiple;
-        if (defaultConstraints != null) {
-            this.defaultConstraints.putAll(defaultConstraints);
-        }
+    this.name = name;
+    this.label = label;
+    this.type = type;
+    this.tooltip = tooltip;
+    this.constraintType = constraintType;
+    this.values = values;
+    this.multiple = multiple;
+    if (defaultConstraints != null) {
+        this.defaultConstraints.putAll(defaultConstraints);
     }
+}
 
     public String getName() {
 

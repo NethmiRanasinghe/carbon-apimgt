@@ -216,7 +216,7 @@ public class KeyManagerMappingUtil {
      * Creates a constraint DTO with the given type and value.
      */
     private static ApplicationConfigurationConstraintDTO createConstraintDTO(String type, Object value) {
-        
+
         if (type == null && value == null) {
             return null;
         }

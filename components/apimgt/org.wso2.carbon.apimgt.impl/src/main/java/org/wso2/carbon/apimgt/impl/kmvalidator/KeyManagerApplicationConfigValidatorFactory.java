@@ -23,6 +23,13 @@ import org.wso2.carbon.apimgt.api.model.KeyManagerApplicationConfigValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Factory for creating Key Manager application configuration validators.
+ *
+ * <p>Returns a new {@link KeyManagerApplicationConfigValidator} instance for the given
+ * {@link AppConfigConstraintType}. New instances are returned because validators may
+ * maintain internal state such as accumulated error messages.</p>
+ */
 public class KeyManagerApplicationConfigValidatorFactory {
 
     protected static Log log = LogFactory.getLog(KeyManagerApplicationConfigValidatorFactory.class);
