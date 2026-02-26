@@ -3384,7 +3384,7 @@ paths:
               -H "Content-Type: application/json" \
               -X POST \
               -d '{"secretId":"sec_123456"}' \
-              "https://localhost:9443/api/am/devportal/v3/applications/16cd2684-9657-4a01-a956-4efd89e96077/oauth-keys/df972173-c957-46d4-96ac-99be8e303584/secrets/4efd2684-9657-4a01-a956-16cd89e96077"
+              "https://localhost:9443/api/am/devportal/v3/applications/16cd2684-9657-4a01-a956-4efd89e96077/oauth-keys/df972173-c957-46d4-96ac-99be8e303584/revoke-secret"
 
   /applications/{applicationId}/api-keys/{keyType}/generate:
     post:
