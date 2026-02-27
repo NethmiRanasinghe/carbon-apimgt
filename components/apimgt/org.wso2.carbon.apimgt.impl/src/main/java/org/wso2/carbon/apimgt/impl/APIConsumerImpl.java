@@ -159,8 +159,14 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -170,7 +176,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -181,6 +186,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.cache.Cache;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import static org.wso2.carbon.apimgt.api.ExceptionCodes.APPLICATION_INACTIVE;
 import static org.wso2.carbon.apimgt.api.ExceptionCodes.WORKFLOW_PENDING;
@@ -2530,6 +2537,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
                         "Key Manager " + keyManagerName + " doesn't exist in Tenant " + tenantDomain,
                         ExceptionCodes.KEY_MANAGER_NOT_REGISTERED);
             }
+            ApplicationUtils.validateKeyManagerAppConfiguration(keyManagerConfiguration, jsonString);
             if (KeyManagerConfiguration.TokenType.EXCHANGED.toString().equals(keyManagerConfiguration.getTokenType())) {
                 throw new APIManagementException("Key Manager " + keyManagerName + " doesn't support to generate" +
                         " Client Application", ExceptionCodes.KEY_MANAGER_NOT_SUPPORT_OAUTH_APP_CREATION);
@@ -3114,6 +3122,7 @@ APIConstants.AuditLogConstants.DELETED, this.username);
                 }
             }
 
+            ApplicationUtils.validateKeyManagerAppConfiguration(keyManagerConfiguration, jsonString);
             if (!keyManagerConfiguration.isEnabled()) {
                 throw new APIManagementException("Key Manager " + keyManagerName + " not activated in the requested " +
                         "Tenant", ExceptionCodes.KEY_MANAGER_NOT_ENABLED);
@@ -3465,26 +3474,72 @@ APIConstants.AuditLogConstants.DELETED, this.username);
         return criteria;
     }
 
+    /**
+     * This method is used to get WSDL file of an API. If the WSDL file is a zip archive, it will returned the zip.
+     *
+     * @param api             API for which WSDL file needs to be retrieved
+     * @param environmentName  Name of the environment
+     * @param environmentType  Type of the environment (e.g., production, sandbox)
+     * @param organization    Identifier of an Organization
+     * @return ResourceFile containing the WSDL content and its content type
+     * @throws APIManagementException if there is an error while retrieving or processing the WSDL file
+     */
     @Override
     public ResourceFile getWSDL(API api, String environmentName, String environmentType, String organization)
             throws APIManagementException {
+        return getWSDLCore(api, environmentName, environmentType, organization, null);
+    }
+
+    /**
+     * This method is used to get WSDL file of an API.
+     * If the WSDL file is a zip archive, it will be extracted and the main WSDL file content will be returned if requested.
+     *
+     *
+     * @param api                     API for which WSDL file needs to be retrieved
+     * @param fileFormat  Flag indicating whether to include main WSDL content for WSDL archives
+     * @param environmentName          Name of the environment
+     * @param environmentType          Type of the environment (e.g., production, sandbox)
+     * @param organization            Identifier of an Organization
+     * @return ResourceFile containing the WSDL content and its content type
+     * @throws APIManagementException if there is an error while retrieving or processing the WSDL file
+     */
+    @Override
+    public ResourceFile getWSDL(API api, String fileFormat, String environmentName, String environmentType,
+            String organization) throws APIManagementException {
+        return getWSDLCore(api, environmentName, environmentType, organization, fileFormat);
+    }
+
+    private ResourceFile getWSDLCore(API api, String environmentName, String environmentType, String organization,
+            String fileFormat) throws APIManagementException {
+
+        ResourceFile resourceFile = getWSDL(api.getUuid(), organization);
+        boolean isZip = resourceFile.getContentType().contains(APIConstants.APPLICATION_ZIP);
 
         WSDLValidationResponse validationResponse;
-        ResourceFile resourceFile = getWSDL(api.getUuid(), organization);
-        if (resourceFile.getContentType().contains(APIConstants.APPLICATION_ZIP)) {
+
+        if (isZip) {
             validationResponse = APIMWSDLReader.extractAndValidateWSDLArchive(resourceFile.getContent());
         } else {
             validationResponse = APIMWSDLReader.validateWSDLFile(resourceFile.getContent());
         }
-        if (validationResponse.isValid()) {
-            WSDLProcessor wsdlProcessor = validationResponse.getWsdlProcessor();
-            wsdlProcessor.updateEndpoints(api, environmentName, environmentType);
-            InputStream wsdlDataStream = wsdlProcessor.getWSDL();
-            return new ResourceFile(wsdlDataStream, resourceFile.getContentType());
-        } else {
-            throw new APIManagementException(ExceptionCodes.from(ExceptionCodes.CORRUPTED_STORED_WSDL,
-                    api.getId().toString()));
+
+        if (!validationResponse.isValid()) {
+            throw new APIManagementException(
+                    ExceptionCodes.from(ExceptionCodes.CORRUPTED_STORED_WSDL, api.getId().toString()));
         }
+
+        WSDLProcessor wsdlProcessor = validationResponse.getWsdlProcessor();
+        wsdlProcessor.updateEndpoints(api, environmentName, environmentType);
+        InputStream wsdlDataStream = wsdlProcessor.getWSDL();
+
+        // Only relevant for wsdl archives, when format is requested in wsdl
+        if (isZip && APIConstants.WSDL_RESOURCE_TYPE.equalsIgnoreCase(fileFormat)) {
+            InputStream mainWsdlFileContent = APIFileUtil.getRootWSDLFileFromExtractedArchive(
+                    validationResponse.getWsdlArchiveInfo().getLocation());
+            return new ResourceFile(mainWsdlFileContent, APIConstants.APPLICATION_WSDL_MEDIA_TYPE);
+        }
+
+        return new ResourceFile(wsdlDataStream, resourceFile.getContentType());
     }
 
     @Override
@@ -5216,5 +5271,12 @@ APIConstants.AuditLogConstants.DELETED, this.username);
         } else {
             api.setSubtype(apiMgtDAO.retrieveAPISubtypeWithUUID(api.getUuid()));
         }
+    }
+
+    @Override
+    public API getAPIWithoutPermissionCheck(String apiId, String organization)
+            throws APIManagementException {
+        return (getAPIorAPIProductByUUIDWithoutPermissionCheck(apiId, organization)).getApi();
+
     }
 }

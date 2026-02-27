@@ -51,6 +51,7 @@ import org.wso2.carbon.apimgt.api.model.webhooks.Subscription;
 import org.wso2.carbon.apimgt.api.model.webhooks.Topic;
 import org.wso2.carbon.apimgt.api.model.ApplicationResponse;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -748,6 +749,21 @@ public interface APIConsumer extends APIManager {
      */
     ResourceFile getWSDL(API api, String environmentName, String environmentType, String organization)
             throws APIManagementException;
+
+    /**
+     * Returns the WSDL ResourceFile (Single WSDL) for the provided API and environment details with an option
+     * to include main WSDL content in the response in ZIP scenario
+     *
+     * @param api                          API
+     * @param fileFormat       whether to include main WSDL content in the response
+     * @param environmentName              environment name
+     * @param environmentType              environment type
+     * @param organization                 Identifier of an organization
+     * @return WSDL of the API
+     * @throws APIManagementException when error occurred while getting the WSDL
+     */
+    ResourceFile getWSDL(API api, String fileFormat, String environmentName, String environmentType,
+            String organization) throws APIManagementException;
     /**
      * Returns application attributes defined in configuration
      *
@@ -986,5 +1002,16 @@ public interface APIConsumer extends APIManager {
      * @throws APIManagementException
      */
     Map<String, Object> searchPaginatedContent(String searchQuery, OrganizationInfo organizationInfo, int start, int end)
+            throws APIManagementException;
+
+    /**
+     * This method is used to validate the signed URL and retrieve the API information related to the URL.
+     *
+     * @param apiId        API UUID
+     * @param organization Identifier of an organization
+     * @return API information related to the signed URL
+     * @throws APIManagementException if an error occurs while validating the signed URL or retrieving API information
+     */
+    API getAPIWithoutPermissionCheck(String apiId, String organization)
             throws APIManagementException;
 }
