@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2026, WSO2 LLC. (https://www.wso2.com).
- *
+ * <p>
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -21,26 +21,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConsumerSecretRequest {
+
     private String clientId;
     private Map<String, Object> parameters = new HashMap<String, Object>();
 
     public String getClientId() {
+
         return clientId;
     }
 
     public void setClientId(String clientId) {
+
         this.clientId = clientId;
     }
 
-    public void addParameter(String name,Object value){
-        parameters.put(name,value);
+    public void addParameter(String name, Object value) {
+
+        parameters.put(name, value);
     }
 
-    public Object getParameter(String name){
+    public Object getParameter(String name) {
+
         return parameters.get(name);
     }
 
-    public void putAll(Map<String,Object> parameters){
+    public void putAll(Map<String, Object> parameters) {
+
         if (parameters != null) {
             this.parameters.putAll(parameters);
         }

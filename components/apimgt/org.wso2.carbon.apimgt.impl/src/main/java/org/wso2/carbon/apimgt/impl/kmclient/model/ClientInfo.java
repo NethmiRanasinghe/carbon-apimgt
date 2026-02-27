@@ -252,18 +252,22 @@ public class ClientInfo {
     }
 
     public String getClientSecretDescription() {
+
         return clientSecretDescription;
     }
 
     public void setClientSecretDescription(String clientSecretDescription) {
+
         this.clientSecretDescription = clientSecretDescription;
     }
 
     public Long getClientSecretExpiresIn() {
+
         return clientSecretExpiresIn;
     }
 
     public void setClientSecretExpiresIn(Long clientSecretExpiresIn) {
+
         this.clientSecretExpiresIn = clientSecretExpiresIn;
     }
 }

@@ -164,6 +164,7 @@ public class ApplicationKeyMappingUtil {
      */
     public static ConsumerSecretRequest fromDTOtoConsumerSecretRequest(String clientId,
                                                                        ConsumerSecretCreationRequestDTO consumerSecretCreationRequestDTO) {
+
         return buildConsumerSecretRequest(clientId, consumerSecretCreationRequestDTO.getAdditionalProperties());
     }
 
@@ -176,6 +177,7 @@ public class ApplicationKeyMappingUtil {
      */
     public static ConsumerSecretRequest fromDTOtoConsumerSecretRequest(String clientId,
                                                                        ConsumerSecretDeletionRequestDTO consumerSecretDeletionRequestDTO) {
+
         return buildConsumerSecretRequest(clientId, consumerSecretDeletionRequestDTO.getAdditionalProperties());
     }
 
@@ -188,6 +190,7 @@ public class ApplicationKeyMappingUtil {
      */
     public static ConsumerSecretRequest buildConsumerSecretRequest(String clientId,
                                                                    Map<String, Object> additionalProperties) {
+
         ConsumerSecretRequest consumerSecretRequest = new ConsumerSecretRequest();
         consumerSecretRequest.setClientId(clientId);
         if (additionalProperties != null) {
@@ -203,6 +206,7 @@ public class ApplicationKeyMappingUtil {
      * @return ConsumerSecretDTO object
      */
     public static ConsumerSecretDTO fromConsumerSecretToDTO(ConsumerSecretInfo consumerSecret) {
+
         if (consumerSecret == null) {
             return null;
         }
@@ -220,6 +224,7 @@ public class ApplicationKeyMappingUtil {
      * @return ConsumerSecretListDTO object
      */
     public static ConsumerSecretListDTO fromConsumerSecretListToDTO(List<ConsumerSecretInfo> consumerSecrets) {
+
         ConsumerSecretListDTO consumerSecretListDTO = new ConsumerSecretListDTO();
         if (consumerSecrets == null) {
             consumerSecretListDTO.setCount(0);

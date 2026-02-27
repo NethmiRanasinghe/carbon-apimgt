@@ -370,6 +370,7 @@ public class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
      */
     public List<ConsumerSecretInfo> retrieveConsumerSecrets(String clientId, String keyManagerName)
             throws APIManagementException {
+
         KeyManagerConfigurationDTO keyManagerConfigurationDTO =
                 apiMgtDAO.getKeyManagerConfigurationByName(tenantDomain, keyManagerName);
         if (keyManagerConfigurationDTO == null) {
@@ -404,6 +405,7 @@ public class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
     public void deleteConsumerSecret(String secretId, String keyManagerName,
                                      ConsumerSecretRequest consumerSecretRequest)
             throws APIManagementException {
+
         KeyManagerConfigurationDTO keyManagerConfigurationDTO =
                 apiMgtDAO.getKeyManagerConfigurationByName(tenantDomain, keyManagerName);
         if (keyManagerConfigurationDTO == null) {

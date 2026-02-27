@@ -723,6 +723,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
     }
 
     private static ConsumerSecretInfo getConsumerSecretInfo(ClientSecret clientSecret, boolean shouldMaskSecret) {
+
         ConsumerSecretInfo clientSecretInfo = new ConsumerSecretInfo();
         clientSecretInfo.setSecretId(clientSecret.getSecretId());
         String secretValue = clientSecret.getClientSecret();
@@ -767,6 +768,7 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
     @Override
     public void deleteApplicationConsumerSecret(String secretId, ConsumerSecretRequest consumerSecretRequest)
             throws APIManagementException {
+
         String clientId = consumerSecretRequest.getClientId();
         String encodedClientId = Base64.getUrlEncoder()
                 .encodeToString(clientId.getBytes(StandardCharsets.UTF_8));

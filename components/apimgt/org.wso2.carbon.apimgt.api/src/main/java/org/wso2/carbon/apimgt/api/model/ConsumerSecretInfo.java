@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2026, WSO2 LLC. (https://www.wso2.com).
- *
+ * <p>
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,32 +20,43 @@ package org.wso2.carbon.apimgt.api.model;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents the consumer secret information which is used to generate the client secret
+ * for a given client id.
+ */
 public class ConsumerSecretInfo {
+
     private String secretId;
     private String clientSecret;
     private Map<String, Object> parameters = new HashMap<String, Object>();
 
     public String getSecretId() {
+
         return secretId;
     }
 
     public void setSecretId(String secretId) {
+
         this.secretId = secretId;
     }
 
     public String getClientSecret() {
+
         return clientSecret;
     }
 
     public void setClientSecret(String clientSecret) {
+
         this.clientSecret = clientSecret;
     }
 
     public Map<String, Object> getParameters() {
+
         return parameters;
     }
 
     public void setParameters(Map<String, Object> parameters) {
+
         this.parameters = parameters;
     }
 }

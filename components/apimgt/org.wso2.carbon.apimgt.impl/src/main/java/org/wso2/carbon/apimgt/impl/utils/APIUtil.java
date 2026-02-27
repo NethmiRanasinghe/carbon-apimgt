@@ -4891,6 +4891,7 @@ public final class APIUtil {
     }
 
     public static String maskSecret(String secret) {
+
         boolean isHashingEnabled = OAuthServerConfiguration.getInstance().isClientSecretHashEnabled();
         if (log.isDebugEnabled()) {
             log.debug("Masking secret. Client Secret Hashing enabled: " + isHashingEnabled);
