@@ -4556,6 +4556,9 @@ public class PublisherCommonUtils {
         apiToAdd.setUriTemplates(uriTemplates);
         apiToAdd.setOrganization(organization);
         apiToAdd.setAsyncApiDefinition(definitionToAdd);
+        apiToAdd.setWsUriMapping(
+                AsyncApiParserFactory.getAsyncApiParser(AsyncApiParserUtil.getAsyncApiVersion(definitionToAdd),
+                        getParserOptionsFromConfig()).buildWSUriMapping(definitionToAdd));
 
         Map<String, String> complianceResult = checkGovernanceComplianceSync(apiToAdd.getUuid(),
                 APIMGovernableState.API_CREATE, ArtifactType.API, organization, null, null);

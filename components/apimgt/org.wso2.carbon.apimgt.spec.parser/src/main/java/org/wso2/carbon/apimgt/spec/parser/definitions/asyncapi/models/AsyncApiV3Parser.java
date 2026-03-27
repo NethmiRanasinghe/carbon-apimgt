@@ -257,7 +257,7 @@ public class AsyncApiV3Parser extends AbstractAsyncApiParser {
             String msg = "Error occurred while validating AsyncAPI definition: " + e.getMessage();
             throw new APIManagementException(msg, e, ExceptionCodes.ERROR_VALIDATING_ASYNCAPI_SPECIFICATION);
         }
-
+// 2
         /**
          * TODO Validation is currently not working since the Apicurio library does not yet include
          * the AsyncAPI v3 model in its ValidationRuleSet. As a result, the validation (problems)
@@ -311,6 +311,7 @@ public class AsyncApiV3Parser extends AbstractAsyncApiParser {
     @Override
     public String generateAsyncAPIDefinition(API api) throws APIManagementException {
         // Create an empty AsyncApiDocument v3
+        // 1
         AsyncApi30Document document = (AsyncApi30Document) AsyncApiParserUtil.createAsyncApiDocument(
                 APISpecParserConstants.AsyncApi.ASYNC_API_V30);
         document.setAsyncapi(APISpecParserConstants.AsyncApi.ASYNC_API_V3);

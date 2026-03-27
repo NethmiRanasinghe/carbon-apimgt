@@ -79,7 +79,8 @@ public class AsyncApiV3ParserUtil {
             return null;
         }
         String extracted = ref.substring(index + 1);
-        return extracted;
+//        return extracted;
+        return extracted.replace("~1", "/").replace("~0", "~");
     }
 
 

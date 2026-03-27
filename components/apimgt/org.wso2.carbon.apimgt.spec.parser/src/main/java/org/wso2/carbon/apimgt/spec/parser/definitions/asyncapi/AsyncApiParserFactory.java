@@ -61,7 +61,8 @@ public class AsyncApiParserFactory {
             } else {
                 return new AsyncApiV2Parser();
             }
-        } else if (version.startsWith(APISpecParserConstants.AsyncApi.ASYNC_API_V30)) {
+        } else if (version.startsWith(APISpecParserConstants.AsyncApi.ASYNC_API_V30) ||
+                version.startsWith(APISpecParserConstants.AsyncApi.ASYNC_API_V31)) {
             log.debug("AsyncAPI definition version is V3.x.x");
             return new AsyncApiV3Parser();
         } else {

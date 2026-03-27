@@ -3580,6 +3580,8 @@ public class APIMappingUtil {
             if (api.getType().equals(APIConstants.API_TYPE_WS)) {
                 Map<String, String> wsUriMappings = api.getWsUriMapping();
                 if (wsUriMappings != null) {
+                    // when creating wsUriMapping (buildWSUriMapping) the key is verb_channelName
+                    // in operationsDTO, the channelName is not there, only the target is (earlier target was the channelName, but now it has been changed to address)
                     String wsUriMapping = wsUriMappings.get(operationsDTO.getVerb() + "_" + operationsDTO.getTarget());
                     if (wsUriMapping != null) {
                         operationsDTO.setUriMapping(wsUriMapping);
